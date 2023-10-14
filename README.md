@@ -51,7 +51,7 @@ The project utilizes the following technologies and libraries:
 <!-- CONTACT -->
 ## Created By
 
-Ahmed Allam - [LinkedIn][https://linkedin.com/in/ahmed-e-allam] - ahmedeallam@aucegypt.edu - 900214493
+Ahmed Allam - [LinkedIn](https://linkedin.com/in/ahmed-e-allam) - ahmedeallam@aucegypt.edu - 900214493
 
 Mohamed Mansour
 
