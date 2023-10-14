@@ -14,9 +14,9 @@
 <br />
 <div align="center">
 
-  <!-- <a href="https://github.com/ahmed-alllam/AlphaLogos">
-    <img src="data/fmri.webp" alt="fmri" width="500">
-  </a> -->
+  <a href="https://github.com/ahmed-alllam/AlphaLogos">
+    <img src="assets/project-image.jpeg" alt="AlphaLogos!" width="500">
+  </a>>
 
 <h3 align="center">AlphaLogos: Logic Synthesis optimization </h3
 
