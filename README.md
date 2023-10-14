@@ -53,7 +53,7 @@ The project utilizes the following technologies and libraries:
 
 Ahmed Allam - [LinkedIn](https://linkedin.com/in/ahmed-e-allam) - ahmedeallam@aucegypt.edu - 900214493
 
-Mohamed Mansour
+Mohamed Mansour - Hamdy47@aucegypt.edu - 900222990
 
 Mohammed Abd El Mageed
 
