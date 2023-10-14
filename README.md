@@ -15,10 +15,10 @@
 <div align="center">
 
   <a href="https://github.com/ahmed-alllam/AlphaLogos">
-    <img src="assets/project-image.jpeg" alt="AlphaLogos!" width="500">
-  </a>>
+    <img src="assets/project-image.jpeg" alt="AlphaLogos!" width="350">
+  </a>
 
-<h3 align="center">AlphaLogos: Logic Synthesis optimization </h3
+<h3 align="center">AlphaLogos: Logic Synthesis Optimization</h3>
 
   <p align="center">
 <!--     <a href="https://github.com/ahmed-alllam/AlphaLogos">View Demo</a> -->
