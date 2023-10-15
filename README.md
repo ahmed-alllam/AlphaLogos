@@ -55,7 +55,7 @@ Ahmed Allam - [LinkedIn](https://linkedin.com/in/ahmed-e-allam) - ahmedeallam@au
 
 Mohamed Mansour - Hamdy47@aucegypt.edu - 900222990
 
-Mohammed Abd El Mageed
+Mohamed Abdelmagid - [LinkedIn](https://www.linkedin.com/in/mohamed-abdelmagid-3aab51195/) - mabdelmagid@aucegypt.edu - 900223215
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
