@@ -163,7 +163,7 @@ map<int,char> uniqueVariablesIndex(const string & expression) {
   return variables;
 }
 
-void truth table(){
+void truthTable(){
   std::string expression;
   std::cout << "Enter the mathematical expression: ";
   std::getline(std::cin, expression);
