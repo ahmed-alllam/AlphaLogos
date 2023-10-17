@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)  # Adjust the minimum version as needed
 project(AlphaLogos)
 
+link_directories(/usr/local/lib)
+
 # Set C++ standard (e.g., C++11, C++14, C++17)
 set(CMAKE_CXX_STANDARD 11)
 
@@ -33,6 +35,13 @@ target_link_libraries(AlphaLogos ${CMAKE_THREAD_LIBS_INIT})
 
 find_package(Crow)
 target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
+
+
+target_link_libraries(AlphaLogos PUBLIC Jinja2CppLight)
+
+
+
+
 
 
 # Specify any compiler-specific options or flags
