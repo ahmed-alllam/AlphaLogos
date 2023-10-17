@@ -26,8 +26,8 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. # ToDo: change to build only Test
-	make
+        cmake .. -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=..
+        make AlphaLogosTests
       working-directory: ${{ github.workspace }}
 
     - name: Run AlphaLogosTests
@@ -35,4 +35,3 @@ jobs:
         cd build
         ./AlphaLogosTests
       working-directory: ${{ github.workspace }}
-
