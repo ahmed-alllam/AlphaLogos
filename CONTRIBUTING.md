@@ -57,7 +57,8 @@ Firstly, thank you for your interest in contributing to AlphaLogos! Follow the s
 
 4. **Start Coding**
 
-   Make your edits and improvements to the codebase.
+   Make your edits and improvements to the codebase. If you are working on a new feature, please ensure to provide tests for that feature. Create a new file in the `tests` folder specifically for the tests related to the new feature. This helps maintain and enhance the project's test coverage.
+
 
 5. **Commit Your Changes**
 
