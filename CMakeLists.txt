@@ -15,6 +15,7 @@ file(GLOB_RECURSE HEADER_FILES
     "include/**/*.h"
 )
 
+
 # Add your source files to the executable
 add_executable(AlphaLogos ${SOURCE_FILES} ${HEADER_FILES})
 
@@ -31,3 +32,39 @@ target_include_directories(AlphaLogos PRIVATE include)
 # Specify the output binary name (optional)
 # set_target_properties(AlphaLogos PROPERTIES OUTPUT_NAME my_program)
 
+
+include(FetchContent)
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v3.0.1  # Use the version you want
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+
+# Create the test target
+file(GLOB_RECURSE TEST_SOURCES
+    "tests/*.cpp"
+    "src/**/*.cpp"  # Include source files from src directory in tests
+)
+
+
+add_executable(AlphaLogosTests ${TEST_SOURCES})
+
+
+# Link the test target with Catch2
+target_link_libraries(AlphaLogosTests PRIVATE Catch2::Catch2WithMain)
+
+# Specify the output binary name for the test target (optional)
+set_target_properties(AlphaLogosTests PROPERTIES OUTPUT_NAME AlphaLogosTests)
+
+# Configure CTest to run the tests
+include(Catch)
+catch_discover_tests(AlphaLogosTests)
+
+# Optionally, you can create a custom target to run the tests
+add_custom_target(run_tests
+    COMMAND AlphaLogosTests
+    DEPENDS AlphaLogosTests
+)
