@@ -1,12 +1,10 @@
 name: CI
 
 on:
-  pull_request:
-    branches:
-      - main  # Run on pull requests targeting the main branch
   push:
-    branches:
-      - '*'  # Run on all branch pushes
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-and-test:
