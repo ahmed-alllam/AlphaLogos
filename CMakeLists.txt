@@ -22,15 +22,25 @@ add_executable(AlphaLogos ${SOURCE_FILES} ${HEADER_FILES})
 # Specify include directories for header files
 target_include_directories(AlphaLogos PRIVATE include)
 
+
+
+
 # Additional libraries or dependencies (if needed)
-# find_package(Boost REQUIRED)
-# target_link_libraries(AlphaLogos PRIVATE Boost::Boost)
+find_package(Boost REQUIRED)
+target_link_libraries(AlphaLogos ${CMAKE_THREAD_LIBS_INIT})
+#target_link_libraries(AlphaLogos PUBLIC Boost)
+
+
+find_package(Crow)
+target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
+
 
 # Specify any compiler-specific options or flags
 # target_compile_options(AlphaLogos PRIVATE -Wall -Wextra)
 
 # Specify the output binary name (optional)
 # set_target_properties(AlphaLogos PROPERTIES OUTPUT_NAME my_program)
+
 
 
 include(FetchContent)
