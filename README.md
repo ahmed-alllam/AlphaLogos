@@ -2,6 +2,7 @@
 
 
 <!-- PROJECT SHIELDS -->
+<img src="https://github.com/ahmed-alllam/AlphaLogos/actions/workflows/tests.yml/badge.svg" alt="Tests Status" height="28"></img>
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
