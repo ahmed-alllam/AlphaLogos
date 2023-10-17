@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main  # Run on pull requests targeting the main branch
+  push:
+    branches:
+      - '*'  # Run on all branch pushes
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
+      shell: bash
+
+    - name: Configure and build AlphaLogosTests
+      run: |
+        mkdir build
+        cd build
+        cmake .. # ToDo: change to build only Test
+	make
+      working-directory: ${{ github.workspace }}
+
+    - name: Run AlphaLogosTests
+      run: |
+        cd build
+        ./AlphaLogosTests
+      working-directory: ${{ github.workspace }}
+
