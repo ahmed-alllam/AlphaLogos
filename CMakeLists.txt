@@ -72,12 +72,12 @@ target_include_directories(AlphaLogos PRIVATE include)
 
 
 # Additional libraries or dependencies (if needed)
-find_package(Boost REQUIRED)
+find_package(Boost)
 target_link_libraries(AlphaLogos ${CMAKE_THREAD_LIBS_INIT})
 #target_link_libraries(AlphaLogos PUBLIC Boost)
 
 
-find_package(Crow REQUIRED)
+find_package(Crow)
 target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
 
 
