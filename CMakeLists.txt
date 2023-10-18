@@ -18,7 +18,9 @@ file(GLOB_RECURSE HEADER_FILES
 )
 
 
+option(BUILD_ONLY_TESTS "Build only tests without main application dependencies" OFF)
 
+if(NOT BUILD_ONLY_TESTS)
 
 
 # Add your source files to the executable
@@ -93,6 +95,10 @@ target_link_libraries(AlphaLogos PUBLIC Jinja2CppLight)
 
 # Specify the output binary name (optional)
 # set_target_properties(AlphaLogos PROPERTIES OUTPUT_NAME my_program)
+
+
+
+endif()
 
 
 
