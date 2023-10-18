@@ -1,17 +1,18 @@
 #include "main_handler.h"
 
+#include <fstream>
+#include <iostream>
+
 using namespace std;
 
 void main_handler(const crow::request& req, crow::response& res) {
 
-    Jinja2CppLight::Template mytemplate( R"d(
-        This is my {{avalue}} template.  It's {{secondvalue}}...
-        Today's weather is {{weather}}.
-    )d" );
+    ifstream template_file("templates/index.html");
 
-    mytemplate.setValue( "avalue", 3 );
-    mytemplate.setValue( "secondvalue", 12.123f );
-    mytemplate.setValue( "weather", "rain" );
+    string template_string = string(istreambuf_iterator<char>(template_file), istreambuf_iterator<char>());
+    
+    Jinja2CppLight::Template mytemplate(template_string);
+
     string result = mytemplate.render();
 
     res.set_header("Content-Type", "text/html");

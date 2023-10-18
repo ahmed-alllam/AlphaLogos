@@ -18,8 +18,52 @@ file(GLOB_RECURSE HEADER_FILES
 )
 
 
+
+
+
 # Add your source files to the executable
 add_executable(AlphaLogos ${SOURCE_FILES} ${HEADER_FILES})
+
+
+
+
+add_custom_command(
+    OUTPUT "${CMAKE_BINARY_DIR}/static_updated"  # Dummy output
+    BYPRODUCTS "${CMAKE_BINARY_DIR}/static"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/src/web/static"
+        "${CMAKE_BINARY_DIR}/static"
+    COMMENT "Copying web/static folder to build directory"
+)
+
+add_custom_command(
+    OUTPUT "${CMAKE_BINARY_DIR}/templates_updated"  # Dummy output
+    BYPRODUCTS "${CMAKE_BINARY_DIR}/templates"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/src/web/templates"
+        "${CMAKE_BINARY_DIR}/templates"
+    COMMENT "Copying web/templates folder to build directory"
+)
+
+
+
+
+add_custom_target(
+    copy_web_content ALL
+    DEPENDS "${CMAKE_BINARY_DIR}/static_updated" "${CMAKE_BINARY_DIR}/templates_updated"
+)
+
+
+
+
+# If your project generates an executable, make it depend on the custom target
+add_dependencies(AlphaLogos copy_web_content)
+
+
+
+
+
+
 
 # Specify include directories for header files
 target_include_directories(AlphaLogos PRIVATE include)
