@@ -24,7 +24,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. --target AlphaLogosTests
+        cmake .. -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=..
         make AlphaLogosTests
       working-directory: ${{ github.workspace }}
 
