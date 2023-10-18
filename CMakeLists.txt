@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)  # Adjust the minimum version as needed
+cmake_minimum_required(VERSION 3.12)
 project(AlphaLogos)
 
 link_directories(/usr/local/lib)
@@ -33,7 +33,7 @@ target_link_libraries(AlphaLogos ${CMAKE_THREAD_LIBS_INIT})
 #target_link_libraries(AlphaLogos PUBLIC Boost)
 
 
-find_package(Crow)
+find_package(Crow REQUIRED)
 target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
 
 
@@ -65,7 +65,8 @@ FetchContent_MakeAvailable(Catch2)
 # Create the test target
 file(GLOB_RECURSE TEST_SOURCES
     "tests/*.cpp"
-    "src/**/*.cpp"  # Include source files from src directory in tests
+    "src/logic_utils/*.cpp"  # Include source files from src directory in tests
+    "src/qm/*.cpp"
 )
 
 
