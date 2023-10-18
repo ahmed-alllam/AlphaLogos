@@ -1,7 +1,6 @@
-#include <iostream>
+#include "server.h"
 
 int main() {
-    std::cout << "Hello Allam, AlphaLogos!" << std::endl;
+    launch_server();
     return 0;
 }
-
