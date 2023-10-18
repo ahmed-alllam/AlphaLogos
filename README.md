@@ -47,6 +47,36 @@ AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and
 The project utilizes the following technologies and libraries:
 
 * [![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
+* [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+* [![Crow](https://img.shields.io/badge/Crow-800000?style=for-the-badge)](https://github.com/CrowCpp/Crow)
+* [![Boost](https://img.shields.io/badge/Boost-FF6F61?style=for-the-badge&logo=boost&logoColor=white)](https://www.boost.org/)
+* [![Jinja2](https://img.shields.io/badge/Jinja2CppLight-B41717?style=for-the-badge)](https://github.com/hughperkins/Jinja2CppLight)
+* [![CMake](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white)](https://cmake.org/)
+* [![Catch2](https://img.shields.io/badge/Catch2-B5177B?style=for-the-badge)](https://github.com/catchorg/Catch2)
+
+
+## Building and Running the Project
+
+To build and run the AlphaLogos project using Docker, follow the steps below:
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/ahmed-alllam/alphalogos.git
+   cd alphalogos
+   ```
+
+2. **Build the Docker Image**:
+   ```bash
+   docker build -t alphalogos:latest .
+   ```
+
+3. **Run the Docker Container**:
+   ```bash
+   docker run -p 8000:8000 alphalogos
+   ```
+
+4. **Access the Application**:
+   After executing the commands above, open your browser and navigate to `http://localhost:8000` to access the application.
 
 
 <!-- CONTACT -->
