@@ -19,7 +19,9 @@ Firstly, thank you for your interest in contributing to AlphaLogos! Follow the s
 
 3. **Install the necessary pre-commit hooks**
 
-   You can find detailed information about the commands [here](https://github.com/pocc/pre-commit-hooks#information-about-the-commands).
+   ```bash
+   python -m pip install clang-tidy clang-format
+   ```
 
 4. **Install the git pre-commit hooks**
 
