@@ -3,4 +3,4 @@
 
 void launch_server();
 
-#endif // SERVER_H
+#endif  // SERVER_H

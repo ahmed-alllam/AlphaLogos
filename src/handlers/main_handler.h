@@ -7,4 +7,4 @@
 
 void main_handler(const crow::request& req, crow::response& res);
 
-#endif // MAIN_HANDLER_H
+#endif  // MAIN_HANDLER_H

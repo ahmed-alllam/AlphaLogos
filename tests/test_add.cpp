@@ -3,6 +3,4 @@
 
 #include "../src/logic_utils/add.h"
 
-TEST_CASE( "Addition of 1, and 2" ) {
-    REQUIRE( add(1, 2) == 3 );
-}
+TEST_CASE("Addition of 1, and 2") { REQUIRE(add(1, 2) == 3); }

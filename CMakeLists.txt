@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.12)
 project(AlphaLogos)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
 link_directories(/usr/local/lib)
 
 # Set C++ standard (e.g., C++11, C++14, C++17)
