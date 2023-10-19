@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 bool isSoPExpression(const std::string& expr) {
     int parenCount = 0;
     bool lastWasAlpha = false;
@@ -11,8 +12,7 @@ bool isSoPExpression(const std::string& expr) {
     bool lastWasApostrophe = false;
     bool endedWithOperator = false;
     bool withinParen = false;
-    bool withinSummation = false;
-    bool withinProduct = false;
+    bool hadSummationInsideParen = false;
 
     for (size_t i = 0; i < expr.size(); i++) {
         char c = expr[i];
@@ -21,7 +21,7 @@ bool isSoPExpression(const std::string& expr) {
 
         if (c == '(') {
             withinParen = true;
-            if (!lastWasOperator) withinProduct = true; // Start of a product term
+            hadSummationInsideParen = false;
             parenCount++;
             endedWithOperator = false;
             continue;
@@ -29,8 +29,10 @@ bool isSoPExpression(const std::string& expr) {
 
         if (c == ')') {
             if (lastWasOperator || !withinParen) return false;
-            if (withinSummation) {
-                withinSummation = false;
+            if (hadSummationInsideParen) {
+                size_t nextCharIndex = i + 1;
+                while (nextCharIndex < expr.size() && expr[nextCharIndex] == ' ') nextCharIndex++;  // Skip spaces
+                if (nextCharIndex == expr.size() || expr[nextCharIndex] != '+') return false;
             }
             withinParen = false;
             parenCount--;
@@ -39,18 +41,16 @@ bool isSoPExpression(const std::string& expr) {
 
         if (c == '+') {
             if (!lastWasAlpha && !lastWasApostrophe) return false;
+            if (withinParen) hadSummationInsideParen = true;
             lastWasOperator = true;
             lastWasAlpha = false;
             lastWasApostrophe = false;
             endedWithOperator = true;
-            withinProduct = false; // Reset product term
             continue;
         }
 
         if (c == '*') {
             if ((!lastWasAlpha && !lastWasApostrophe) || lastWasOperator) return false;
-            if (withinSummation) return false;  // Multiplication is not allowed inside a summation
-            withinProduct = true;  // Allow multiplication for product terms
             lastWasOperator = true;
             lastWasAlpha = false;
             lastWasApostrophe = false;
@@ -63,7 +63,6 @@ bool isSoPExpression(const std::string& expr) {
             lastWasOperator = false;
             lastWasApostrophe = false;
             endedWithOperator = false;
-            if (!withinParen && !lastWasApostrophe && !withinSummation) withinProduct = true; // Start of a product term
             continue;
         }
 
@@ -73,7 +72,6 @@ bool isSoPExpression(const std::string& expr) {
             lastWasApostrophe = true;
             lastWasOperator = false;
             endedWithOperator = false;
-            if (!withinParen && !lastWasAlpha && !withinSummation) withinProduct = true; // Start of a product term
             continue;
         }
 
@@ -81,5 +79,5 @@ bool isSoPExpression(const std::string& expr) {
         return false;
     }
 
-    return parenCount == 0 && !endedWithOperator && !withinParen;
+    return parenCount == 0 && !endedWithOperator;
 }
