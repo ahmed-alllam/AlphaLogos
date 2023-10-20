@@ -1,6 +1,4 @@
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 using namespace std;
@@ -54,28 +52,27 @@ vector<Token> tokenize(string expression) {
   return tokens;
 }
 
-vector<unordered_map<Token, bool>> generatePermutations(
+vector<vector<pair<Token, bool>>> generatePermutations(
     const vector<Token> &tokens) {
-  vector<unordered_map<Token, bool>> permutations;
+  vector<vector<pair<Token, bool>>> permutations;
 
-  unordered_set<char> uniqueVarValues;
   vector<Token> uniqueVarTokens;
 
   for (const auto &token : tokens) {
     if (token.type == TokenType::VAR &&
-        uniqueVarValues.find(token.value) == uniqueVarValues.end()) {
-      uniqueVarValues.insert(token.value);
+        find(uniqueVarTokens.begin(), uniqueVarTokens.end(), token) ==
+            uniqueVarTokens.end()) {
       uniqueVarTokens.push_back(token);
     }
   }
 
   int numUniqueVars = uniqueVarTokens.size();
 
-  for (int i = 0; i < pow(2, numUniqueVars); i++) {
+  for (int i = 0; i < (1 << numUniqueVars); i++) {
     int temp = i;
-    unordered_map<Token, bool> permutation;
+    vector<pair<Token, bool>> permutation;
     for (const auto &uniqueToken : uniqueVarTokens) {
-      permutation[uniqueToken] = temp % 2 == 0;
+      permutation.push_back({uniqueToken, temp % 2});
       temp /= 2;
     }
 
@@ -85,8 +82,10 @@ vector<unordered_map<Token, bool>> generatePermutations(
   return permutations;
 }
 
-bool evaluateExpression(const vector<Token> &tokens, int index,
-                        const unordered_map<Token, bool> &permutation) {
+bool evaluateExpression(const vector<Token> &tokens, int &index,
+                        const vector<pair<Token, bool>> &permutation) {
+  int starting_copy = index;
+
   bool value;
 
   if (index >= tokens.size()) {
@@ -97,11 +96,9 @@ bool evaluateExpression(const vector<Token> &tokens, int index,
 
   switch (token.type) {
     case TokenType::VAR:
-      // Look up the value of the variable in the permutation by matching the
-      // token
-      for (const auto &[permToken, permValue] : permutation) {
-        if (permToken.value == token.value) {
-          value = permValue;
+      for (const auto &[varToken, varValue] : permutation) {
+        if (varToken == token) {
+          value = varValue;
           break;
         }
       }
@@ -136,19 +133,22 @@ bool evaluateExpression(const vector<Token> &tokens, int index,
     index++;
   }
 
-  // Look for AND (*) or implicit multiplication by juxtaposition
-  while (index < tokens.size() && (tokens[index].type == TokenType::AND ||
-                                   tokens[index].type == TokenType::OPEN_PAR)) {
+  // Handle implicit multiplication and explicit AND
+  while (index < tokens.size() && (tokens[index].type == TokenType::VAR ||
+                                   tokens[index].type == TokenType::OPEN_PAR ||
+                                   tokens[index].type == TokenType::AND)) {
     if (tokens[index].type == TokenType::AND) {
       index++;  // Skip '*'
     }
-    value = value && evaluateExpression(tokens, index, permutation);
+    bool nextValue = evaluateExpression(tokens, index, permutation);
+    value = value & nextValue;
   }
 
-  // Look for OR (+)
+  // Handle OR
   while (index < tokens.size() && tokens[index].type == TokenType::OR) {
     index++;  // Skip '+'
-    value = value || evaluateExpression(tokens, index, permutation);
+    bool nextValue = evaluateExpression(tokens, index, permutation);
+    value = value | nextValue;
   }
 
   return value;
@@ -156,19 +156,20 @@ bool evaluateExpression(const vector<Token> &tokens, int index,
 
 vector<vector<bool>> generateTruthTable(string expression) {
   vector<Token> tokens = tokenize(expression);
-  vector<unordered_map<Token, bool>> permutations =
-      generatePermutations(tokens);
+  vector<vector<pair<Token, bool>>> permutations = generatePermutations(tokens);
   vector<vector<bool>> truthTable;
 
   for (auto permutation : permutations) {
     vector<bool> row;
-    for (int i = 0; i < tokens.size(); i++) {
-      if (tokens[i].type == TokenType::VAR) {
-        row.push_back(permutation[tokens[i]]);
-      }
+
+    // add permutation values to row acsending by as they were stored in the map
+    for (const auto &[token, value] : permutation) {
+      row.push_back(value);
     }
 
-    row.push_back(evaluateExpression(tokens, 0, permutation));
+    int index = 0;
+
+    row.push_back(evaluateExpression(tokens, index, permutation));
     truthTable.push_back(row);
   }
 
