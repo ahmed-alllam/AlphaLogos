@@ -42,7 +42,7 @@ vector<Token> tokenize(string expression) {
           break;
         }
 
-        throw invalid_argument("Invalid character in expression");
+        throw("Invalid character in expression");
     }
 
     tokens.push_back(token);
