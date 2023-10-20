@@ -6,8 +6,6 @@
 
 using namespace std;
 
-string boolToString(bool b) { return b ? "true" : "false"; }
-
 bool validateTruthTable(
     const std::unordered_map<std::vector<bool>, bool> &expected,
     const string &expression) {
@@ -108,6 +106,86 @@ TEST_CASE(
       {{false, false, true, false}, true},
       {{false, false, false, true}, false},
       {{false, false, false, false}, false}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE(
+    "Truth table for expression A B C' D E G' + A' B C D' E' G + A B' C D G' + "
+    "A' B' C' D G + E G A' B' C") {
+  string expr =
+      "( A B C ' D E G ' ) + ( A ' B C D ' E ' G ) +  A B ' C D G ' + ( A ' B "
+      "' C ' D G ) + ( E G A ' B ' C )";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+
+      {{true, true, true, true, true, true}, false},
+      {{true, true, true, true, true, false}, false},
+      {{true, true, true, true, false, true}, false},
+      {{true, true, true, true, false, false}, false},
+      {{true, true, true, false, true, true}, false},
+      {{true, true, true, false, true, false}, false},
+      {{true, true, true, false, false, true}, false},
+      {{true, true, true, false, false, false}, false},
+      {{true, true, false, true, true, true}, false},
+      {{true, true, false, true, true, false}, true},
+      {{true, true, false, true, false, true}, false},
+      {{true, true, false, true, false, false}, false},
+      {{true, true, false, false, true, true}, false},
+      {{true, true, false, false, true, false}, false},
+      {{true, true, false, false, false, true}, false},
+      {{true, true, false, false, false, false}, false},
+      {{true, false, true, true, true, true}, false},
+      {{true, false, true, true, true, false}, true},
+      {{true, false, true, true, false, true}, false},
+      {{true, false, true, true, false, false}, true},
+      {{true, false, true, false, true, true}, false},
+      {{true, false, true, false, true, false}, false},
+      {{true, false, true, false, false, true}, false},
+      {{true, false, true, false, false, false}, false},
+      {{true, false, false, true, true, true}, false},
+      {{true, false, false, true, true, false}, false},
+      {{true, false, false, true, false, true}, false},
+      {{true, false, false, true, false, false}, false},
+      {{true, false, false, false, true, true}, false},
+      {{true, false, false, false, true, false}, false},
+      {{true, false, false, false, false, true}, false},
+      {{true, false, false, false, false, false}, false},
+      {{false, true, true, true, true, true}, false},
+      {{false, true, true, true, true, false}, false},
+      {{false, true, true, true, false, true}, false},
+      {{false, true, true, true, false, false}, false},
+      {{false, true, true, false, true, true}, false},
+
+      {{false, true, true, false, true, false}, false},
+      {{false, true, true, false, false, true}, true},
+      {{false, true, true, false, false, false}, false},
+      {{false, true, false, true, true, true}, false},
+      {{false, true, false, true, true, false}, false},
+      {{false, true, false, true, false, true}, false},
+      {{false, true, false, true, false, false}, false},
+      {{false, true, false, false, true, true}, false},
+      {{false, true, false, false, true, false}, false},
+      {{false, true, false, false, false, true}, false},
+      {{false, true, false, false, false, false}, false},
+      {{false, false, true, true, true, true}, true},
+      {{false, false, true, true, true, false}, false},
+      {{false, false, true, true, false, true}, false},
+      {{false, false, true, true, false, false}, false},
+      {{false, false, true, false, true, true}, true},
+      {{false, false, true, false, true, false}, false},
+      {{false, false, true, false, false, true}, false},
+      {{false, false, true, false, false, false}, false},
+      {{false, false, false, true, true, true}, true},
+      {{false, false, false, true, true, false}, false},
+      {{false, false, false, true, false, true}, true},
+      {{false, false, false, true, false, false}, false},
+      {{false, false, false, false, true, true}, false},
+      {{false, false, false, false, true, false}, false},
+      {{false, false, false, false, false, true}, false},
+      {{false, false, false, false, false, false}, false}
+
+  };
 
   REQUIRE(validateTruthTable(expected, expr) == true);
 }
