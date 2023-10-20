@@ -243,3 +243,66 @@ TEST_CASE("Truth table for expression a + a'") {
 
   REQUIRE(validateTruthTable(expected, expr) == true);
 }
+
+TEST_CASE("Truth table for expression (a) + (a)'") {
+  string expr = "(a) + (a)'";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {{{true}, true},
+                                                          {{false}, true}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE("Truth table for expression (((a))) + (a)'") {
+  string expr = "(((a))) + (a)'";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {{{true}, true},
+                                                          {{false}, true}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE("Truth table for expression (a') + (b')") {
+  string expr = "(a') + (b')";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{false, false}, true},
+      {{false, true}, true},
+      {{true, false}, true},
+      {{true, true}, false}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE("Truth table for expression       (    a ) * (b       )") {
+  string expr = "      (    a ) * (b       )";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{false, false}, false},
+      {{false, true}, false},
+      {{true, false}, false},
+      {{true, true}, true}};
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE("Truth table for expression  (((a')')*(b)')") {
+  string expr = "(((a')')'*(b)')";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{false, false}, true},
+      {{false, true}, false},
+      {{true, false}, false},
+      {{true, true}, false}};
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE("Truth table for expression  (((a')')'(b)')'") {
+  string expr = "(((a')')'(b)')'";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{false, false}, false},
+      {{false, true}, true},
+      {{true, false}, true},
+      {{true, true}, true}};
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
