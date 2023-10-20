@@ -317,3 +317,26 @@ TEST_CASE("Truth table for expression  ((a')')'*(b)'") {
       {{true, true}, false}};
   REQUIRE(validateTruthTable(expected, expr) == true);
 }
+
+TEST_CASE("Truth table for expression a'' + b") {
+  string expr = "a'' + b";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{false, false}, false},
+      {{false, true}, true},
+      {{true, false}, true},
+      {{true, true}, true}};
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE("Truth table for expression  (a+b)'' + b''' + ab''  ") {
+  string expr = "(a+b)'' + b''' + ab' ";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{false, false}, true},
+      {{false, true}, true},
+      {{true, false}, true},
+      {{true, true}, true}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}

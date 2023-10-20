@@ -52,40 +52,49 @@ vector<Token> tokenize(string expression) {
 }
 
 vector<Token> addParenthesesForPrecedence(vector<Token> tokens) {
-  vector<Token> newTokens;
-  int openParCount = 0;  // Track existing open parentheses
-  int termStart = -1;    // Track the start of a term
+  std::vector<Token> newTokens;
+  std::vector<Token> term;
+  int openParCount = 0;
 
   for (size_t i = 0; i < tokens.size(); i++) {
-    const auto &token = tokens[i];
-
+    Token token = tokens[i];
     if (token.type == TokenType::OPEN_PAR) {
       openParCount++;
     } else if (token.type == TokenType::CLOSE_PAR) {
       openParCount--;
     }
 
-    if (termStart == -1 &&
-        (token.type == TokenType::VAR || token.type == TokenType::NOT_POST)) {
-      termStart = i;  // Mark the start of a term
+    if (openParCount == 0 && token.type == TokenType::OR) {
+      if (!term.empty()) {
+        // Don't add extra parentheses if the term is already enclosed in
+        // parentheses
+        if (term.front().type == TokenType::OPEN_PAR &&
+            term.back().type == TokenType::CLOSE_PAR) {
+          newTokens.insert(newTokens.end(), term.begin(), term.end());
+        } else {
+          newTokens.push_back({TokenType::OPEN_PAR, '('});
+          newTokens.insert(newTokens.end(), term.begin(), term.end());
+          newTokens.push_back({TokenType::CLOSE_PAR, ')'});
+        }
+        term.clear();  // Reset term
+      }
+
+      // Add OR to newTokens
+      newTokens.push_back(token);
+    } else {
+      term.push_back(token);
     }
 
-    // Check if we've reached the end of a term
-    bool endOfTerm =
-        (i + 1 == tokens.size() || tokens[i + 1].type == TokenType::OR);
-    if (endOfTerm && openParCount == 0 && termStart != -1) {
-      if (termStart == 0 || tokens[termStart - 1].type != TokenType::OPEN_PAR) {
+    // Handle the last token
+    if (i == tokens.size() - 1 && !term.empty()) {
+      if (term.front().type == TokenType::OPEN_PAR &&
+          term.back().type == TokenType::CLOSE_PAR) {
+        newTokens.insert(newTokens.end(), term.begin(), term.end());
+      } else {
         newTokens.push_back({TokenType::OPEN_PAR, '('});
-      }
-      for (int j = termStart; j <= i; j++) {
-        newTokens.push_back(tokens[j]);
-      }
-      if (i == tokens.size() - 1 || tokens[i].type != TokenType::CLOSE_PAR) {
+        newTokens.insert(newTokens.end(), term.begin(), term.end());
         newTokens.push_back({TokenType::CLOSE_PAR, ')'});
       }
-      termStart = -1;  // Reset term start
-    } else if (termStart == -1) {
-      newTokens.push_back(token);  // Add non-term tokens directly
     }
   }
 
@@ -159,8 +168,8 @@ bool evaluateExpression(const vector<Token> &tokens, int &index,
       throw "Unexpected token in expression";
   }
 
-  // Postfix NOT (e.g., A')
-  if (index < tokens.size() && tokens[index].type == TokenType::NOT_POST) {
+  // Postfix NOT (e.g., A'). Handle multiple NOTs
+  while (index < tokens.size() && tokens[index].type == TokenType::NOT_POST) {
     value = !value;
     index++;
   }
