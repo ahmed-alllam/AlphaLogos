@@ -6,22 +6,24 @@
 
 using namespace std;
 
-void compareTruthTables(std::unordered_map<std::vector<bool>, bool> expected,
-                        vector<vector<bool>> result) {
-  for (int i = 0; i < result.size(); i++) {
-    vector<bool> permutation = result[i];
+string boolToString(bool b) { return b ? "true" : "false"; }
 
-    vector<bool> permutationWithoutLast(permutation.begin(),
-                                        permutation.end() - 1);
+bool validateTruthTable(
+    const std::unordered_map<std::vector<bool>, bool> &expected,
+    const string &expression) {
+  vector<vector<bool>> generatedTruthTable = generateTruthTable(expression);
 
-    bool last = permutation[permutation.size() - 1];
+  for (const vector<bool> &row : generatedTruthTable) {
+    vector<bool> input(row.begin(), row.end() - 1);
+    bool output = row.back();
 
-    REQUIRE(expected.find(permutationWithoutLast) != expected.end());
-
-    INFO("The idx is " << i);
-
-    REQUIRE(expected[permutationWithoutLast] == last);
+    if (expected.find(input) == expected.end() ||
+        expected.at(input) != output) {
+      return false;
+    }
   }
+
+  return true;
 }
 
 TEST_CASE("Truth table for expression A + B * !C") {
@@ -33,9 +35,7 @@ TEST_CASE("Truth table for expression A + B * !C") {
       {{true, false, false}, true}, {{false, true, true}, false},
       {{false, true, false}, true}, {{false, false, false}, false}};
 
-  vector<vector<bool>> result = generateTruthTable(expr);
-
-  compareTruthTables(expected, result);
+  REQUIRE(validateTruthTable(expected, expr) == true);
 }
 
 TEST_CASE("Truth table for expression (A+D)*(B+C)") {
@@ -59,7 +59,55 @@ TEST_CASE("Truth table for expression (A+D)*(B+C)") {
       {{false, false, false, true}, false},
       {{false, false, false, false}, false}};
 
-  vector<vector<bool>> result = generateTruthTable(expr);
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
 
-  compareTruthTables(expected, result);
+TEST_CASE("Truth table for expression (a+bc)(a+(b+c+d)(cd))") {
+  string expr = "(a+bc)(a+(b+c+d)(cd))";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{true, true, true, true}, true},
+      {{true, true, true, false}, true},
+      {{true, true, false, true}, true},
+      {{true, true, false, false}, true},
+      {{true, false, true, true}, true},
+      {{true, false, true, false}, true},
+      {{true, false, false, true}, true},
+      {{true, false, false, false}, true},
+      {{false, true, true, true}, true},
+      {{false, true, true, false}, false},
+      {{false, true, false, true}, false},
+      {{false, true, false, false}, false},
+      {{false, false, true, true}, false},
+      {{false, false, true, false}, false},
+      {{false, false, false, true}, false},
+      {{false, false, false, false}, false}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
+}
+
+TEST_CASE(
+    "Truth table for complex nested expression ((a' + b(c' + d))(c + a(b' + "
+    "d)))") {
+  string expr = "((a' + b(c' + d))(c + a(b' + d)))";
+
+  std::unordered_map<std::vector<bool>, bool> expected = {
+      {{true, true, true, true}, true},
+      {{true, true, true, false}, false},
+      {{true, true, false, true}, true},
+      {{true, true, false, false}, false},
+      {{true, false, true, true}, false},
+      {{true, false, true, false}, false},
+      {{true, false, false, true}, false},
+      {{true, false, false, false}, false},
+      {{false, true, true, true}, true},
+      {{false, true, true, false}, true},
+      {{false, true, false, true}, false},
+      {{false, true, false, false}, false},
+      {{false, false, true, true}, true},
+      {{false, false, true, false}, true},
+      {{false, false, false, true}, false},
+      {{false, false, false, false}, false}};
+
+  REQUIRE(validateTruthTable(expected, expr) == true);
 }
