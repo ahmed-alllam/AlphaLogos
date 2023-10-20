@@ -26,8 +26,8 @@ bool validateTruthTable(
   return true;
 }
 
-TEST_CASE("Truth table for expression A + B * !C") {
-  string expr = "A + B * !C";
+TEST_CASE("Truth table for expression A + B * C' ") {
+  string expr = "A + B * C' ";
 
   std::unordered_map<std::vector<bool>, bool> expected = {
       {{true, true, true}, true},   {{true, true, false}, true},
@@ -87,9 +87,9 @@ TEST_CASE("Truth table for expression (a+bc)(a+(b+c+d)(cd))") {
 }
 
 TEST_CASE(
-    "Truth table for complex nested expression ((a' + b(c' + d))(c + a(b' + "
+    "Truth table for complex nested expression (((a' + b(c' + d)))(c + a(b' + "
     "d)))") {
-  string expr = "((a' + b(c' + d))(c + a(b' + d)))";
+  string expr = "(((a' + b(c' + d)))(c + a(b' + d)))";
 
   std::unordered_map<std::vector<bool>, bool> expected = {
       {{true, true, true, true}, true},

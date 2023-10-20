@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -23,9 +24,6 @@ vector<Token> tokenize(string expression) {
         break;
       case '+':
         token.type = TokenType::OR;
-        break;
-      case '!':
-        token.type = TokenType::NOT_PRE;
         break;
       case '\'':
         token.type = TokenType::NOT_POST;
@@ -84,8 +82,6 @@ vector<vector<pair<Token, bool>>> generatePermutations(
 
 bool evaluateExpression(const vector<Token> &tokens, int &index,
                         const vector<pair<Token, bool>> &permutation) {
-  int starting_copy = index;
-
   bool value;
 
   if (index >= tokens.size()) {
@@ -96,12 +92,13 @@ bool evaluateExpression(const vector<Token> &tokens, int &index,
 
   switch (token.type) {
     case TokenType::VAR:
-      for (const auto &[varToken, varValue] : permutation) {
-        if (varToken == token) {
-          value = varValue;
+      for (const auto &pair : permutation) {
+        if (pair.first == token) {
+          value = pair.second;
           break;
         }
       }
+
       index++;
       break;
 
@@ -116,13 +113,6 @@ bool evaluateExpression(const vector<Token> &tokens, int &index,
       }
       index++;  // Skip ')'
       break;
-
-    case TokenType::NOT_PRE:
-      index++;  // Skip '!'
-      value = !evaluateExpression(
-          tokens, index, permutation);  // Recurse for the negated value
-      break;
-
     default:
       throw "Unexpected token in expression";
   }
@@ -163,8 +153,8 @@ vector<vector<bool>> generateTruthTable(string expression) {
     vector<bool> row;
 
     // add permutation values to row acsending by as they were stored in the map
-    for (const auto &[token, value] : permutation) {
-      row.push_back(value);
+    for (const auto &pair : permutation) {
+      row.push_back(pair.second);
     }
 
     int index = 0;
