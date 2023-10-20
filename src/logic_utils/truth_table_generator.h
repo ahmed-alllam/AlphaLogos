@@ -11,7 +11,6 @@ enum class TokenType {
   VAR,       // a, b, c, ...
   AND,       // *
   OR,        // +
-  NOT_PRE,   // !   ToDo: remove this
   NOT_POST,  // '
   OPEN_PAR,  // (
   CLOSE_PAR  // )
@@ -27,6 +26,8 @@ struct Token {
 };
 
 vector<Token> tokenize(string expression);
+
+vector<Token> addParenthesesForPrecedence(vector<Token> tokens);
 
 vector<vector<pair<Token, bool>>> generatePermutations(
     const vector<Token> &tokens);

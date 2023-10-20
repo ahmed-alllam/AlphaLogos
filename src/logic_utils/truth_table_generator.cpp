@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -41,13 +42,56 @@ vector<Token> tokenize(string expression) {
           break;
         }
 
-        throw "Invalid character in expression";
+        throw invalid_argument("Invalid character in expression");
     }
 
     tokens.push_back(token);
   }
 
   return tokens;
+}
+
+vector<Token> addParenthesesForPrecedence(vector<Token> tokens) {
+  vector<Token> newTokens;
+  bool insideTerm = false;
+  bool addedOpenPar = false;
+  int openParCount = 0;  // Track existing open parentheses
+
+  for (size_t i = 0; i < tokens.size(); i++) {
+    const auto &token = tokens[i];
+
+    if (token.type == TokenType::OPEN_PAR) {
+      openParCount++;
+    } else if (token.type == TokenType::CLOSE_PAR) {
+      openParCount--;
+    }
+
+    // Start of a term
+    if ((token.type == TokenType::VAR || token.type == TokenType::NOT_POST) &&
+        !insideTerm && openParCount == 0) {
+      insideTerm = true;
+      // Only add an opening parenthesis if the next character isn't an '('
+      if (i + 1 < tokens.size() && tokens[i + 1].type != TokenType::OPEN_PAR) {
+        newTokens.push_back({TokenType::OPEN_PAR, '('});
+        addedOpenPar = true;
+      } else {
+        addedOpenPar = false;
+      }
+    }
+
+    newTokens.push_back(token);
+
+    // End of a term (either an OR token or end of the sequence)
+    if (insideTerm && openParCount == 0 &&
+        (i + 1 == tokens.size() || tokens[i + 1].type == TokenType::OR)) {
+      if (addedOpenPar) {
+        newTokens.push_back({TokenType::CLOSE_PAR, ')'});
+      }
+      insideTerm = false;
+    }
+  }
+
+  return newTokens;
 }
 
 vector<vector<pair<Token, bool>>> generatePermutations(
@@ -138,7 +182,7 @@ bool evaluateExpression(const vector<Token> &tokens, int &index,
   while (index < tokens.size() && tokens[index].type == TokenType::OR) {
     index++;  // Skip '+'
     bool nextValue = evaluateExpression(tokens, index, permutation);
-    value = value | nextValue;
+    value |= nextValue;
   }
 
   return value;
@@ -146,13 +190,13 @@ bool evaluateExpression(const vector<Token> &tokens, int &index,
 
 vector<vector<bool>> generateTruthTable(string expression) {
   vector<Token> tokens = tokenize(expression);
+  tokens = addParenthesesForPrecedence(tokens);
   vector<vector<pair<Token, bool>>> permutations = generatePermutations(tokens);
   vector<vector<bool>> truthTable;
 
   for (auto permutation : permutations) {
     vector<bool> row;
 
-    // add permutation values to row acsending by as they were stored in the map
     for (const auto &pair : permutation) {
       row.push_back(pair.second);
     }
