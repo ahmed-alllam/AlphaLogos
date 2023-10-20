@@ -53,9 +53,8 @@ vector<Token> tokenize(string expression) {
 
 vector<Token> addParenthesesForPrecedence(vector<Token> tokens) {
   vector<Token> newTokens;
-  bool insideTerm = false;
-  bool addedOpenPar = false;
   int openParCount = 0;  // Track existing open parentheses
+  int termStart = -1;    // Track the start of a term
 
   for (size_t i = 0; i < tokens.size(); i++) {
     const auto &token = tokens[i];
@@ -66,28 +65,27 @@ vector<Token> addParenthesesForPrecedence(vector<Token> tokens) {
       openParCount--;
     }
 
-    // Start of a term
-    if ((token.type == TokenType::VAR || token.type == TokenType::NOT_POST) &&
-        !insideTerm && openParCount == 0) {
-      insideTerm = true;
-      // Only add an opening parenthesis if the next character isn't an '('
-      if (i + 1 < tokens.size() && tokens[i + 1].type != TokenType::OPEN_PAR) {
-        newTokens.push_back({TokenType::OPEN_PAR, '('});
-        addedOpenPar = true;
-      } else {
-        addedOpenPar = false;
-      }
+    if (termStart == -1 &&
+        (token.type == TokenType::VAR || token.type == TokenType::NOT_POST)) {
+      termStart = i;  // Mark the start of a term
     }
 
-    newTokens.push_back(token);
-
-    // End of a term (either an OR token or end of the sequence)
-    if (insideTerm && openParCount == 0 &&
-        (i + 1 == tokens.size() || tokens[i + 1].type == TokenType::OR)) {
-      if (addedOpenPar) {
+    // Check if we've reached the end of a term
+    bool endOfTerm =
+        (i + 1 == tokens.size() || tokens[i + 1].type == TokenType::OR);
+    if (endOfTerm && openParCount == 0 && termStart != -1) {
+      if (termStart == 0 || tokens[termStart - 1].type != TokenType::OPEN_PAR) {
+        newTokens.push_back({TokenType::OPEN_PAR, '('});
+      }
+      for (int j = termStart; j <= i; j++) {
+        newTokens.push_back(tokens[j]);
+      }
+      if (i == tokens.size() - 1 || tokens[i].type != TokenType::CLOSE_PAR) {
         newTokens.push_back({TokenType::CLOSE_PAR, ')'});
       }
-      insideTerm = false;
+      termStart = -1;  // Reset term start
+    } else if (termStart == -1) {
+      newTokens.push_back(token);  // Add non-term tokens directly
     }
   }
 
