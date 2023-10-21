@@ -8,4 +8,5 @@
 
 using namespace std;
 vector<Token> canonical_forms_sop(string expression);
+vector<Token> canonical_forms_pos(string expression);
 vector<Token> uniqueVariables(vector<Token> expression);

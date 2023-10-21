@@ -6,21 +6,25 @@
 using namespace std;
 #include "truth_table_generator.cpp"
 
+// Function to find unique variables in the expression
 vector<Token> unique(vector<Token> expression) {
   vector<Token> answer;
   for (int i = 0; i < expression.size(); i++) {
     if (expression[i].type == TokenType::VAR) {
+      // Check if the variable already exists in the answer vector
       for (int j = 0; j < i; j++) {
         if (expression[i].value == expression[j].value) {
           break;
         }
       }
+      // Add the unique variable to the answer vector
       answer.push_back(expression[i]);
     }
   }
   return answer;
 }
 
+// Function to generate the canonical SOP (Sum of Products) form
 vector<Token> canonical_forms_sop(string expression) {
   vector<vector<bool>> truth_table = generateTruthTable(expression);
   vector<Token> tokenized_string = tokenize(expression);
@@ -37,8 +41,10 @@ vector<Token> canonical_forms_sop(string expression) {
       openBracket.type = TokenType::OPEN_PAR;
       canonical_sop.push_back(openBracket);
 
+      // Iterate through each variable in the row
       for (size_t j = 0; j < row.size() - 1; j++) {
         if (row[j]) {
+          // Variable is true, add it to the SOP as is
           Token minterm_expression;
           minterm_expression.type = TokenType::VAR;
           minterm_expression.value = uniqueVariables[j].value;
@@ -48,6 +54,7 @@ vector<Token> canonical_forms_sop(string expression) {
           and_expression.type = TokenType::AND;
           canonical_sop.push_back(and_expression);
         } else {
+          // Variable is false, add its negation to the SOP
           Token not_expression;
           not_expression.type = TokenType::NOT_POST;
 
@@ -83,6 +90,7 @@ vector<Token> canonical_forms_sop(string expression) {
   return canonical_sop;
 }
 
+// Function to generate the canonical POS (Product of Sums) form
 vector<Token> canonical_forms_pos(string expression) {
   vector<vector<bool>> truth_table = generateTruthTable(expression);
   vector<Token> tokenized_string = tokenize(expression);
@@ -98,8 +106,11 @@ vector<Token> canonical_forms_pos(string expression) {
       Token openBracket;
       openBracket.type = TokenType::OPEN_PAR;
       canonical_pos.push_back(openBracket);
+
+      // Iterate through each variable in the row
       for (size_t j = 0; j < row.size() - 1; j++) {
         if (!row[j]) {
+          // Variable is false, add it to the POS as is
           Token minterm_expression;
           minterm_expression.type = TokenType::VAR;
           minterm_expression.value = uniqueVariables[j].value;
@@ -109,6 +120,7 @@ vector<Token> canonical_forms_pos(string expression) {
           or_expression.type = TokenType::OR;
           canonical_pos.push_back(or_expression);
         } else {
+          // Variable is true, add its negation to the POS
           Token not_expression;
           not_expression.type = TokenType::NOT_POST;
 
@@ -125,6 +137,7 @@ vector<Token> canonical_forms_pos(string expression) {
         }
       }
 
+      // Remove the trailing OR operator
       canonical_pos.pop_back();
 
       Token closedBracket;
@@ -137,33 +150,8 @@ vector<Token> canonical_forms_pos(string expression) {
     }
   }
 
+  // Remove the trailing AND operator
   canonical_pos.pop_back();
 
   return canonical_pos;
-}
-
-int main() {
-  std::string expression = "a + b + c";
-  std::vector<Token> canonical = canonical_forms_sop(expression);
-
-  // Display the canonical forms
-  std::cout << "Canonical Forms:\n";
-  for (const Token& token : canonical) {
-    if (token.type == TokenType::VAR)
-      std::cout << token.value;
-    else if (token.type == TokenType::NOT_POST)
-      std::cout << "\'";
-    else if (token.type == TokenType::AND)
-      std::cout << "*";
-    else if (token.type == TokenType::OR)
-      std::cout << "+";
-    else if (token.type == TokenType::CLOSE_PAR)
-      std::cout << ")";
-    else if (token.type == TokenType::OPEN_PAR)
-      std::cout << "(";
-    std::cout << " ";
-  }
-  std::cout << std::endl;
-
-  return 0;
 }
