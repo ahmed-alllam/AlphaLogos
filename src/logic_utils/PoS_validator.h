@@ -7,4 +7,4 @@ using namespace std;
 
 bool isValidPoS(const string& expr);
 
-#endif // POS_EXPRESSION_H 
+#endif  // POS_EXPRESSION_H
