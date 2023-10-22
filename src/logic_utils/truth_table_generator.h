@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Todo: put this in a separate file, as it is used in multiple places
 enum class TokenType {
   VAR,       // a, b, c, ...
   AND,       // *
