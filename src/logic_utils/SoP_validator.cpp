@@ -5,13 +5,13 @@
 using namespace std;
 
 
-bool isSoPExpression(const std::string& expr) {
-    int parenCount = 0;
+bool isValidSoP(const std::string& expr) {
+    int unmatchedParenCount = 0;
     bool lastWasAlpha = false;
     bool lastWasOperator = false;
-    bool lastWasApostrophe = false;
+    bool lastCharWasApostrophe = false;
     bool endedWithOperator = false;
-    bool withinParen = false;
+    bool isParenthesisOpen = false;
     bool hadSummationInsideParen = false;
 
     for (size_t i = 0; i < expr.size(); i++) {
@@ -20,40 +20,40 @@ bool isSoPExpression(const std::string& expr) {
         if (c == ' ') continue;  // Ignore spaces
 
         if (c == '(') {
-            withinParen = true;
+            isParenthesisOpen = true;
             hadSummationInsideParen = false;
-            parenCount++;
+            unmatchedParenCount++;
             endedWithOperator = false;
             continue;
         }
 
         if (c == ')') {
-            if (lastWasOperator || !withinParen) return false;
+            if (lastWasOperator || !isParenthesisOpen) return false;
             if (hadSummationInsideParen) {
                 size_t nextCharIndex = i + 1;
                 while (nextCharIndex < expr.size() && expr[nextCharIndex] == ' ') nextCharIndex++;  // Skip spaces
                 if (nextCharIndex == expr.size() || expr[nextCharIndex] != '+') return false;
             }
-            withinParen = false;
-            parenCount--;
+            isParenthesisOpen = false;
+            unmatchedParenCount--;
             continue;
         }
 
         if (c == '+') {
-            if (!lastWasAlpha && !lastWasApostrophe) return false;
-            if (withinParen) hadSummationInsideParen = true;
+            if (!lastWasAlpha && !lastCharWasApostrophe) return false;
+            if (isParenthesisOpen) hadSummationInsideParen = true;
             lastWasOperator = true;
             lastWasAlpha = false;
-            lastWasApostrophe = false;
+            lastCharWasApostrophe = false;
             endedWithOperator = true;
             continue;
         }
 
         if (c == '*') {
-            if ((!lastWasAlpha && !lastWasApostrophe) || lastWasOperator) return false;
+            if ((!lastWasAlpha && !lastCharWasApostrophe) || lastWasOperator) return false;
             lastWasOperator = true;
             lastWasAlpha = false;
-            lastWasApostrophe = false;
+            lastCharWasApostrophe = false;
             endedWithOperator = true;
             continue;
         }
@@ -61,7 +61,7 @@ bool isSoPExpression(const std::string& expr) {
         if (isalpha(c)) {
             lastWasAlpha = true;
             lastWasOperator = false;
-            lastWasApostrophe = false;
+            lastCharWasApostrophe = false;
             endedWithOperator = false;
             continue;
         }
@@ -69,7 +69,7 @@ bool isSoPExpression(const std::string& expr) {
         if (c == '\'') {
             if (!lastWasAlpha) return false;
             lastWasAlpha = false;
-            lastWasApostrophe = true;
+            lastCharWasApostrophe = true;
             lastWasOperator = false;
             endedWithOperator = false;
             continue;
@@ -79,5 +79,5 @@ bool isSoPExpression(const std::string& expr) {
         return false;
     }
 
-    return parenCount == 0 && !endedWithOperator;
+    return unmatchedParenCount == 0 && !endedWithOperator;
 }

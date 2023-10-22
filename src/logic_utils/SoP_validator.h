@@ -6,6 +6,6 @@
 #include "SoP_validator.h"
 using namespace std;
 
-bool isSoPExpression(const string& expr);
+bool isValidSoP(const string& expr);
 
 #endif
