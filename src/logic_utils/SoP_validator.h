@@ -1,7 +1,7 @@
 #ifndef SOP_VALIDATOR_H
 #define SOP_VALIDATOR_H
-#include <iostream>
 #include <cctype>
+#include <iostream>
 
 #include "SoP_validator.h"
 using namespace std;
