@@ -16,9 +16,23 @@ struct Implicant {
   bool is_checked;
 
   bool operator==(const Implicant &other) const {
-    return minterms == other.minterms && binary == other.binary &&
-           is_prime == other.is_prime && is_essential == other.is_essential &&
-           is_checked == other.is_checked;
+    if (minterms.size() != other.minterms.size()) {
+      return false;
+    }
+
+    vector<int> minterms = this->minterms;
+    vector<int> other_minterms = other.minterms;
+
+    sort(minterms.begin(), minterms.end());
+    sort(other_minterms.begin(), other_minterms.end());
+
+    for (int i = 0; i < minterms.size(); i++) {
+      if (minterms[i] != other_minterms[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 };
 
