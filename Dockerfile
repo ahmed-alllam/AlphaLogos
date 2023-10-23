@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y \
     libboost-all-dev \
     libasio-dev \
     git \
-    libpthread-stubs0-dev && \
+    libpthread-stubs0-dev \
+    texlive-latex-extra \
+    inkscape && \
     rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/CrowCpp/Crow.git /tmp/crow && \

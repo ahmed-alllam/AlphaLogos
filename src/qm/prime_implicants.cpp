@@ -41,7 +41,9 @@ vector<Implicant> generatePrimeImplicants(vector<Minterm> minterms) {
       }
     }
     for (const auto& implicant : column) {
-      if (!implicant.is_checked) {
+      if (!implicant.is_checked &&
+          find(prime_implicants.begin(), prime_implicants.end(), implicant) ==
+              prime_implicants.end()) {
         prime_implicants.push_back(implicant);
       }
     }

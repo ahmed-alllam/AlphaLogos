@@ -13,4 +13,7 @@ vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
                                 vector<Token> variableTokens,
                                 vector<Minterm> minterms);
 
+string makeKMapLaTeX(vector<Implicant> primeImplicants,
+                     vector<Token> variableTokens, vector<Minterm> minterms);
+
 #endif  // KMAP_H
