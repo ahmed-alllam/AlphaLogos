@@ -122,8 +122,6 @@ int mintermDistance(int a, int b, int num_vars) {
 
   if (num_vars == 2) {
     order = {0, 1, 2, 3};
-  } else if (num_vars == 3) {
-    order = {0, 1, 3, 2, 4, 5, 7, 6};
   }
 
   auto getIndex = [&order](int value) -> int {
@@ -237,6 +235,8 @@ string generateLatexForImplicant(Implicant implicant, int num_vars) {
            to_string(minterms[0]) + "}" + "{" + to_string(minterms[1]) + "}{" +
            to_string(minterms[1]) + "}";
   }
+
+  return "";
 }
 
 string makeKMapLaTeX(vector<Implicant> primeImplicants,
@@ -248,8 +248,8 @@ string makeKMapLaTeX(vector<Implicant> primeImplicants,
   string latex = R"(
 
 
-\documentclass[tikz, border=2mm]{standalone}
-\usepackage{karnaugh-map}
+  \documentclass[tikz, border=2mm]{standalone}
+  \usepackage{karnaugh-map}
 
   \begin{document}
 

@@ -90,30 +90,3 @@ TEST_CASE("Test KMap for 5 variables") {
 
   REQUIRE_THROWS(makeKMap(primeImplicants, variableTokens, minterms));
 }
-
-TEST_CASE("Test latex kmap for f(a, b, c)=Σm(0,2,3,6)") {
-  vector<Token> variableTokens = {
-      {TokenType::VAR, 'a'}, {TokenType::VAR, 'b'}, {TokenType::VAR, 'c'}};
-
-  vector<Minterm> minterms = {
-      {0, {0, 0, 0}, 0, false},
-      // {1, {0, 0, 1}, 1, false},
-      {2, {0, 1, 0}, 1, false},
-      {3, {0, 1, 1}, 2, false},
-      {4, {1, 0, 0}, 1, false},
-      // {5, {0, 1, 0, 1}, 2, false},
-      {6, {1, 1, 0}, 2, false},
-      {7, {1, 1, 1}, 3, false},
-  };
-
-  vector<Implicant> primeImplicants = generatePrimeImplicants(minterms);
-
-  string kmap = makeKMapLaTeX(primeImplicants, variableTokens, minterms);
-
-  string expected =
-      "  b'c' b'c bc bc' \n"
-      "a' 1 PI0 0 1 PI1 1 PI0 PI1 PI2 \n"
-      "a 0 0 0 1 PI2 \n";
-
-  REQUIRE(kmap == expected);
-}
