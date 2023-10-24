@@ -2,7 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "../src/logic_utils/circuit_drawer.h"
-#include "../src/logic_utils/truth_table_generator.h"
+#include "../src/logic_utils/token.h"
 
 using namespace std;
 

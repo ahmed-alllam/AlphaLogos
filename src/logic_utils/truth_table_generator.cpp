@@ -7,50 +7,6 @@ using namespace std;
 
 #include "truth_table_generator.h"
 
-vector<Token> tokenize(string expression) {
-  vector<Token> tokens;
-
-  for (size_t i = 0; i < expression.length(); i++) {
-    char c = expression[i];
-
-    if (c == ' ') {
-      continue;
-    }
-
-    Token token;
-
-    switch (c) {
-      case '*':
-        token.type = TokenType::AND;
-        break;
-      case '+':
-        token.type = TokenType::OR;
-        break;
-      case '\'':
-        token.type = TokenType::NOT_POST;
-        break;
-      case '(':
-        token.type = TokenType::OPEN_PAR;
-        break;
-      case ')':
-        token.type = TokenType::CLOSE_PAR;
-        break;
-      default:
-        if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
-          token.type = TokenType::VAR;
-          token.value = c;
-          break;
-        }
-
-        throw("Invalid character in expression");
-    }
-
-    tokens.push_back(token);
-  }
-
-  return tokens;
-}
-
 vector<Token> addParenthesesForPrecedence(vector<Token> tokens) {
   std::vector<Token> newTokens;
   std::vector<Token> term;
@@ -195,8 +151,7 @@ bool evaluateExpression(const vector<Token> &tokens, int &index,
   return value;
 }
 
-vector<vector<bool>> generateTruthTable(string expression) {
-  vector<Token> tokens = tokenize(expression);
+vector<vector<bool>> generateTruthTable(vector<Token> tokens) {
   tokens = addParenthesesForPrecedence(tokens);
   vector<vector<pair<Token, bool>>> permutations = generatePermutations(tokens);
   vector<vector<bool>> truthTable;

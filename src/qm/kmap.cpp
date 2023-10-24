@@ -7,8 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "../logic_utils/truth_table_generator.h"
-#include "../qm/prime_implicants.h"
+#include "../logic_utils/minterm.h"
+#include "../logic_utils/token.h"
+#include "implicant.h"
 
 using namespace std;
 

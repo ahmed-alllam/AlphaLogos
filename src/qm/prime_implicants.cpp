@@ -4,7 +4,8 @@
 #include <iostream>
 #include <string>
 
-#include "../logic_utils/truth_table_generator.h"
+#include "../logic_utils/minterm.h"
+#include "../logic_utils/token.h"
 
 using namespace std;
 
@@ -51,19 +52,4 @@ vector<Implicant> generatePrimeImplicants(vector<Minterm> minterms) {
   }
 
   return prime_implicants;
-}
-
-string implicantToString(const Implicant& implicant,
-                         vector<Token> variableTokens) {
-  string result;
-
-  for (int i = 0; i < implicant.binary.size(); i++) {
-    if (implicant.binary[i] == 1) {
-      result += variableTokens[i].value;
-    } else if (implicant.binary[i] == 0) {
-      result += variableTokens[i].value;
-      result += '\'';
-    }
-  }
-  return result;
 }

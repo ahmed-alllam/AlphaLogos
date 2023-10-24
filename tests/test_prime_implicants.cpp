@@ -2,14 +2,16 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vector>
 
-#include "../src/logic_utils/truth_table_generator.h"
+#include "../src/logic_utils/minterm.h"
+#include "../src/logic_utils/token.h"
+#include "../src/qm/implicant.h"
 #include "../src/qm/prime_implicants.h"
 
 using namespace std;
 
 void compareImplicants(const vector<Implicant>& output,
                        const vector<Implicant>& expected,
-                       const vector<Token>& variableTokens) {
+                       vector<Token> variableTokens) {
   REQUIRE(output.size() == output.size());
 
   // find the implicant in output that matches the implicant in expected
