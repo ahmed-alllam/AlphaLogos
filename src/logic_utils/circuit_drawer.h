@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "truth_table_generator.h"
+#include "token.h"
 
 using namespace std;
 

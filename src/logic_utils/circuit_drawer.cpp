@@ -1,11 +1,11 @@
 #include "circuit_drawer.h"
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <algorithm>
 
-#include "truth_table_generator.h"
+#include "token.h"
 
 using namespace std;
 
