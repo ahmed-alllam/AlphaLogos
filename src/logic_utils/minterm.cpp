@@ -20,3 +20,18 @@ string mintermToString(Minterm minterm, vector<Token> uniqueVariables) {
 
   return mintermString;
 }
+
+string mintermsToString(vector<Minterm> minterms,
+                        vector<Token> uniqueVariables) {
+  string mintermsString = "";
+
+  for (int i = 0; i < minterms.size(); i++) {
+    mintermsString += mintermToString(minterms[i], uniqueVariables);
+
+    if (i != minterms.size() - 1) {
+      mintermsString += "+";
+    }
+  }
+
+  return mintermsString;
+}
