@@ -61,15 +61,7 @@ vector<vector<pair<Token, bool>>> generatePermutations(
     const vector<Token> &tokens) {
   vector<vector<pair<Token, bool>>> permutations;
 
-  vector<Token> uniqueVarTokens;
-
-  for (const auto &token : tokens) {
-    if (token.type == TokenType::VAR &&
-        find(uniqueVarTokens.begin(), uniqueVarTokens.end(), token) ==
-            uniqueVarTokens.end()) {
-      uniqueVarTokens.push_back(token);
-    }
-  }
+  vector<Token> uniqueVarTokens = getUniqueVariables(tokens);
 
   int numUniqueVars = uniqueVarTokens.size();
 
