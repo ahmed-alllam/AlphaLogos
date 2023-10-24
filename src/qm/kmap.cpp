@@ -2,43 +2,27 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <set>
 #include <string>
 #include <vector>
-
-#include <iostream>
 
 #include "../logic_utils/truth_table_generator.h"
 #include "../qm/prime_implicants.h"
 
 using namespace std;
 
-void replaceVariable(string &str, const string &placeholder,
-                     const string &replacement)
-{
-  int pos;
-  while ((pos = str.find(placeholder)) != string::npos)
-  {
-    str.replace(pos, placeholder.length(), replacement);
-  }
-}
-
-vector<string> generateGrayCode(int n)
-{
-  if (n == 0)
-    return {""};
-  if (n == 1)
-    return {"0", "1"};
+vector<string> generateGrayCode(int n) {
+  if (n == 0) return {""};
+  if (n == 1) return {"0", "1"};
 
   vector<string> previous = generateGrayCode(n - 1);
   vector<string> current;
 
-  for (const auto &str : previous)
-  {
+  for (const auto &str : previous) {
     current.push_back("0" + str);
   }
-  for (auto it = previous.rbegin(); it != previous.rend(); ++it)
-  {
+  for (auto it = previous.rbegin(); it != previous.rend(); ++it) {
     current.push_back("1" + *it);
   }
 
@@ -47,20 +31,17 @@ vector<string> generateGrayCode(int n)
 
 int binaryToGray(int num) { return num ^ (num >> 1); }
 
-int calculateMinterm(int row, int col, int numCols)
-{
+int calculateMinterm(int row, int col, int numCols) {
   int grayRow = binaryToGray(row);
   int grayCol = binaryToGray(col);
   return grayRow * numCols + grayCol;
 }
 
-bool customSort(int a, int b, int num_vars)
-{
-  std::vector<int> order = {0, 1, 3, 2, 4, 5, 7, 6,
+bool customSort(int a, int b, int num_vars) {
+  std::vector<int> order = {0,  1,  3,  2,  4, 5, 7,  6,
                             12, 13, 15, 14, 8, 9, 11, 10};
 
-  if (num_vars == 2)
-  {
+  if (num_vars == 2) {
     order = {0, 1, 2, 3};
   }
 
@@ -72,10 +53,8 @@ bool customSort(int a, int b, int num_vars)
 
 vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
                                 vector<Token> variableTokens,
-                                vector<Minterm> minterms)
-{
-  if (variableTokens.size() < 2 || variableTokens.size() > 4)
-  {
+                                vector<Minterm> minterms) {
+  if (variableTokens.size() < 2 || variableTokens.size() > 4) {
     throw "Invalid number of variables for KMap.";
   }
 
@@ -89,11 +68,9 @@ vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
   vector<string> colGrayCodes =
       generateGrayCode(variableTokens.size() - variableTokens.size() / 2);
 
-  for (int i = 0; i < numRows; i++)
-  {
+  for (int i = 0; i < numRows; i++) {
     string rowLabel;
-    for (int j = 0; j < rowGrayCodes[i].size(); j++)
-    {
+    for (int j = 0; j < rowGrayCodes[i].size(); j++) {
       rowLabel += (rowGrayCodes[i][j] == '0')
                       ? variableTokens[j].value + string("'")
                       : string(1, variableTokens[j].value);
@@ -102,11 +79,9 @@ vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
   }
 
   // Fill in the column headers
-  for (int i = 0; i < numCols; i++)
-  {
+  for (int i = 0; i < numCols; i++) {
     string colLabel;
-    for (int j = 0; j < colGrayCodes[i].size(); j++)
-    {
+    for (int j = 0; j < colGrayCodes[i].size(); j++) {
       colLabel +=
           (colGrayCodes[i][j] == '0')
               ? variableTokens[j + variableTokens.size() / 2].value +
@@ -118,26 +93,19 @@ vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
 
   kmap[0][0] = " ";
 
-  for (int row = 0; row < numRows; row++)
-  {
-    for (int col = 0; col < numCols; col++)
-    {
+  for (int row = 0; row < numRows; row++) {
+    for (int col = 0; col < numCols; col++) {
       int mintermValue = calculateMinterm(row, col, numCols);
 
-      for (int piIndex = 0; piIndex < primeImplicants.size(); piIndex++)
-      {
+      for (int piIndex = 0; piIndex < primeImplicants.size(); piIndex++) {
         const auto &implicant = primeImplicants[piIndex];
 
         // If the implicant covers the current minterm
         if (find(implicant.minterms.begin(), implicant.minterms.end(),
-                 mintermValue) != implicant.minterms.end())
-        {
-          if (kmap[row + 1][col + 1] == "0")
-          { // +1 to skip headers
+                 mintermValue) != implicant.minterms.end()) {
+          if (kmap[row + 1][col + 1] == "0") {  // +1 to skip headers
             kmap[row + 1][col + 1] = "1 PI" + to_string(piIndex);
-          }
-          else
-          {
+          } else {
             kmap[row + 1][col + 1] += " PI" + to_string(piIndex);
           }
         }
@@ -148,148 +116,132 @@ vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
   return kmap;
 }
 
-int mintermDistance(int a, int b, int num_vars)
-{
-  std::vector<int> order = {0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10};
+int mintermDistance(int a, int b, int num_vars) {
+  std::vector<int> order = {0,  1,  3,  2,  4, 5, 7,  6,
+                            12, 13, 15, 14, 8, 9, 11, 10};
 
-  if (num_vars == 2)
-  {
+  if (num_vars == 2) {
     order = {0, 1, 2, 3};
+  } else if (num_vars == 3) {
+    order = {0, 1, 3, 2, 4, 5, 7, 6};
   }
 
-  auto getIndex = [&order](int value) -> int
-  {
-    return std::distance(order.begin(), std::find(order.begin(), order.end(), value));
+  auto getIndex = [&order](int value) -> int {
+    return std::distance(order.begin(),
+                         std::find(order.begin(), order.end(), value));
   };
 
+  int columns = num_vars == 2 ? 2 : 4;
+
   // Same row case
-  if (a / num_vars == b / num_vars)
-  {
+  if (a / columns == b / columns) {
     int pos_a = getIndex(a);
     int pos_b = getIndex(b);
     return std::abs(pos_a - pos_b);
   }
 
   // Same column case
-  if (getIndex(a) % num_vars == getIndex(b) % num_vars)
-  {
+  if (getIndex(a) % columns == getIndex(b) % columns) {
     int pos_a = getIndex(a);
     int pos_b = getIndex(b);
-    return std::abs(pos_a / num_vars - pos_b / num_vars);
+    return std::abs(pos_a / columns - pos_b / columns);
   }
 
   // Diagonal case
   int pos_a = getIndex(a);
   int pos_b = getIndex(b);
-  int row_dist = std::abs(pos_a / num_vars - pos_b / num_vars) + 1;
-  int col_dist = std::abs(pos_a % num_vars - pos_b % num_vars) + 1;
+  int row_dist = std::abs(pos_a / columns - pos_b / columns) + 1;
+  int col_dist = std::abs(pos_a % columns - pos_b % columns) + 1;
 
   // Area of the rectangle connecting the two minterms
   return row_dist * col_dist - 1;
 }
 
-string generateLatexForImplicant(Implicant implicant, int num_vars)
-{
+string generateLatexForImplicant(Implicant implicant, int num_vars) {
   vector<int> minterms = implicant.minterms;
-  sort(minterms.begin(), minterms.end(), [num_vars](int a, int b)
-       { return customSort(a, b, num_vars); });
+  sort(minterms.begin(), minterms.end(),
+       [num_vars](int a, int b) { return customSort(a, b, num_vars); });
 
   if (minterms.size() == 4 &&
       find(minterms.begin(), minterms.end(), 0) != minterms.end() &&
       find(minterms.begin(), minterms.end(), 2) != minterms.end() &&
       find(minterms.begin(), minterms.end(), 8) != minterms.end() &&
-      find(minterms.begin(), minterms.end(), 10) != minterms.end())
-  {
+      find(minterms.begin(), minterms.end(), 10) != minterms.end()) {
     return "\\implicantcorner";
   }
 
-  int distance = mintermDistance(minterms[0], minterms[minterms.size() - 1], num_vars);
+  int distance =
+      mintermDistance(minterms[0], minterms[minterms.size() - 1], num_vars);
 
-  if (minterms.size() > distance)
-  {
-    return "\\implicant{" + to_string(minterms[0]) + "}{" + to_string(minterms[minterms.size() - 1]) + "}";
+  if (minterms.size() > distance) {
+    return "\\implicant{" + to_string(minterms[0]) + "}{" +
+           to_string(minterms[minterms.size() - 1]) + "}";
   }
 
-  if (minterms.size() == 4 || minterms.size() == 8)
-  {
+  if (minterms.size() == 4 || minterms.size() == 8) {
     string s = "\\implicantedge";
-
-    // find minterm with lowest row and column
-    // find minterm with highest row and least column
-    // find minterm with highest column and least row
-    // find minterm with lowest column and highest row
 
     int minRow = 100;
     int minCol = 100;
     int maxRow = -1;
     int maxCol = -1;
 
-    // all according to order
-    std::vector<int> order = {0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10};
+    vector<int> order = {0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10};
 
-    if (num_vars == 2)
-    {
+    if (num_vars == 2) {
       order = {0, 1, 2, 3};
     }
 
-    auto getIndex = [&order](int value) -> int
-    {
-      return std::distance(order.begin(), std::find(order.begin(), order.end(), value));
+    auto getIndex = [&order](int value) -> int {
+      return std::distance(order.begin(),
+                           find(order.begin(), order.end(), value));
     };
 
-    for (int minterm : minterms)
-    {
-      int row = getIndex(minterm) / num_vars;
-      int col = getIndex(minterm) % num_vars;
+    int num_cols = num_vars == 2 ? 2 : 4;
 
-      if (row < minRow)
-      {
+    for (int minterm : minterms) {
+      int row = getIndex(minterm) / num_cols;
+      int col = getIndex(minterm) % num_cols;
+
+      if (row < minRow) {
         minRow = row;
       }
-      if (row > maxRow)
-      {
+      if (row > maxRow) {
         maxRow = row;
       }
-      if (col < minCol)
-      {
+      if (col < minCol) {
         minCol = col;
       }
-      if (col > maxCol)
-      {
+      if (col > maxCol) {
         maxCol = col;
       }
     }
 
-    if (minterms[0] + 1 != minterms[1])
-    {
-      s += "{" + to_string(order[minRow * num_vars + minCol]) + "}{" +
-           to_string(order[maxRow * num_vars + minCol]) + "}{" +
-           to_string(order[minRow * num_vars + maxCol]) + "}{" +
-           to_string(order[maxRow * num_vars + maxCol]) + "}";
-    }
-    else
-    {
-      s += "{" + to_string(order[minRow * num_vars + minCol]) + "}{" +
-           to_string(order[minRow * num_vars + maxCol]) + "}{" +
-           to_string(order[maxRow * num_vars + minCol]) + "}{" +
-           to_string(order[maxRow * num_vars + maxCol]) + "}";
+    if (minterms[0] + 1 != minterms[1]) {
+      s += "{" + to_string(order[minRow * num_cols + minCol]) + "}{" +
+           to_string(order[maxRow * num_cols + minCol]) + "}{" +
+           to_string(order[minRow * num_cols + maxCol]) + "}{" +
+           to_string(order[maxRow * num_cols + maxCol]) + "}";
+    } else {
+      s += "{" + to_string(order[minRow * num_cols + minCol]) + "}{" +
+           to_string(order[minRow * num_cols + maxCol]) + "}{" +
+           to_string(order[maxRow * num_cols + minCol]) + "}{" +
+           to_string(order[maxRow * num_cols + maxCol]) + "}";
     }
 
     return s;
   }
 
-  if (minterms.size() == 2)
-  {
-    return "\\implicantedge{" + to_string(minterms[0]) + "}{" + to_string(minterms[0]) + "}" +
-           "{" + to_string(minterms[1]) + "}{" + to_string(minterms[1]) + "}";
+  if (minterms.size() == 2) {
+    return "\\implicantedge{" + to_string(minterms[0]) + "}{" +
+           to_string(minterms[0]) + "}" + "{" + to_string(minterms[1]) + "}{" +
+           to_string(minterms[1]) + "}";
   }
 }
 
 string makeKMapLaTeX(vector<Implicant> primeImplicants,
-                     vector<Token> variableTokens, vector<Minterm> minterms)
-{
-  if (variableTokens.size() < 2 || variableTokens.size() > 4)
-  {
+                     vector<Token> variableTokens, vector<Minterm> minterms) {
+  if (variableTokens.size() < 2 || variableTokens.size() > 4) {
     throw "Invalid number of variables for KMap.";
   }
 
@@ -303,21 +255,15 @@ string makeKMapLaTeX(vector<Implicant> primeImplicants,
 
   \begin {karnaugh-map})";
 
-  if (variableTokens.size() == 2)
-  {
+  if (variableTokens.size() == 2) {
     latex += "[2][2][1]";
-  }
-  else if (variableTokens.size() == 3)
-  {
+  } else if (variableTokens.size() == 3) {
     latex += "[4][2][1]";
-  }
-  else
-  {
+  } else {
     latex += "[4][4][1]";
   }
 
-  for (int i = variableTokens.size() - 1; i >= 0; i--)
-  {
+  for (int i = variableTokens.size() - 1; i >= 0; i--) {
     latex += "[$" + string(1, variableTokens[i].value) + "$]";
   }
 
@@ -328,34 +274,28 @@ string makeKMapLaTeX(vector<Implicant> primeImplicants,
 
   latex += "\\manualterms{";
 
-  for (int row = 0; row < numRows; row++)
-  {
-    for (int col = 0; col < numCols; col++)
-    {
+  for (int row = 0; row < numRows; row++) {
+    for (int col = 0; col < numCols; col++) {
       int mintermValue = row * numCols + col;
 
       bool found = false;
-      for (Minterm minterm : minterms)
-      {
-        if (minterm.index == mintermValue)
-        {
+      for (Minterm minterm : minterms) {
+        if (minterm.index == mintermValue) {
           latex += "1,";
           found = true;
           break;
         }
       }
-      if (!found)
-      {
+      if (!found) {
         latex += "0,";
       }
     }
   }
 
-  latex.pop_back(); // remove last comma
+  latex.pop_back();  // remove last comma
   latex += "}\n";
 
-  for (Implicant implicant : primeImplicants)
-  {
+  for (Implicant implicant : primeImplicants) {
     latex += generateLatexForImplicant(implicant, variableTokens.size()) + "\n";
   }
 
