@@ -8,12 +8,12 @@ using namespace std;
 void main_handler(const crow::request& req, crow::response& res) {
   ifstream template_file("templates/index.html");
 
-  string template_string = string(istreambuf_iterator<char>(template_file),
-                                  istreambuf_iterator<char>());
+  string homePage = string(istreambuf_iterator<char>(template_file),
+                           istreambuf_iterator<char>());
 
-  Jinja2CppLight::Template mytemplate(template_string);
+  Jinja2CppLight::Template homePageTemplate(homePage);
 
-  string result = mytemplate.render();
+  string result = homePageTemplate.render();
 
   res.set_header("Content-Type", "text/html");
   res.write(result);
