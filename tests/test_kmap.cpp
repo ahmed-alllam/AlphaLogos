@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch_test_macros.hpp>
+#include <iostream>
 #include <vector>
 
 #include "../src/qm/kmap.h"
@@ -91,28 +92,18 @@ TEST_CASE("Test KMap for 5 variables") {
 }
 
 TEST_CASE("Test latex kmap for f(a, b, c)=Σm(0,2,3,6)") {
-  vector<Token> variableTokens = {{TokenType::VAR, 'a'},
-                                  {TokenType::VAR, 'b'},
-                                  {TokenType::VAR, 'c'},
-                                  {TokenType::VAR, 'd'}};
+  vector<Token> variableTokens = {
+      {TokenType::VAR, 'a'}, {TokenType::VAR, 'b'}, {TokenType::VAR, 'c'}};
 
   vector<Minterm> minterms = {
-      {0, {0, 0, 0, 0}, 0, false},
-      // {1, {0, 0, 0, 1}, 1, false},
-      {2, {0, 0, 1, 0}, 1, false},
-      // {3, {0, 0, 1, 1}, 2, false},
-      {4, {0, 1, 0, 0}, 1, false},
+      {0, {0, 0, 0}, 0, false},
+      // {1, {0, 0, 1}, 1, false},
+      {2, {0, 1, 0}, 1, false},
+      {3, {0, 1, 1}, 2, false},
+      {4, {1, 0, 0}, 1, false},
       // {5, {0, 1, 0, 1}, 2, false},
-      {6, {0, 1, 1, 0}, 2, false},
-      // {7, {0, 1, 1, 1}, 3, false},
-      {8, {1, 0, 0, 0}, 1, false},
-      // {9, {1, 0, 0, 1}, 2, false},
-      {10, {1, 0, 1, 0}, 2, false},
-      // {11, {1, 0, 1, 1}, 3, false},
-      {12, {1, 1, 0, 0}, 2, false},
-      // {13, {1, 1, 0, 1}, 3, false},
-      {14, {1, 1, 1, 0}, 3, false},
-      // {15, {1, 1, 1, 1}, 4, false}
+      {6, {1, 1, 0}, 2, false},
+      {7, {1, 1, 1}, 3, false},
   };
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minterms);
