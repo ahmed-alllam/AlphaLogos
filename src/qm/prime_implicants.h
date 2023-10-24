@@ -2,6 +2,7 @@
 #define PRIME_IMPLICANTS_H
 
 #include <string>
+#include <algorithm>
 #include <vector>
 
 #include "../logic_utils/truth_table_generator.h"
