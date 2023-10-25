@@ -109,9 +109,9 @@ function addPaddingToCanonicals() {
     if (!canonicalSoP || !canonicalPoS) {
         return;
     }
-    
+
     canonicalSoP.innerHTML = canonicalSoP.innerHTML.replaceAll("+", "&nbsp; + &nbsp;");
-    canonicalPoS.innerHTML = canonicalPoS.innerHTML.replaceAll(")(", ") &nbsp; ("); 
+    canonicalPoS.innerHTML = canonicalPoS.innerHTML.replaceAll(")(", ") &nbsp; (");
 }
 
 document.getElementById("canonicalForms").onclick = function () {
@@ -223,6 +223,91 @@ document.getElementById("primeImplicants").onclick = function () {
     return false;
 }
 
+function removeLabels(obj) {
+    for (let key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+            // Recursively check nested objects
+            removeLabels(obj[key]);
+        }
+        if (key === 'label' && typeof obj[key] === 'string' && obj[key].includes('$')) {
+            delete obj[key];
+        }
+    }
+}
+
+function displayVerilogCode(div, code) {
+    div.innerHTML = "";
+    const container = document.createElement('div');
+    container.className = 'circuit-container';
+    container.id = 'circuit-container';
+    div.appendChild(container);
+
+    const jsonCode = JSON.parse(code);
+
+    // remove all labels (nested) in json that contain $
+    removeLabels(jsonCode);
+
+    setTimeout(() => {
+        const circuit = new digitaljs.Circuit(jsonCode);
+        circuit.displayOn($('#circuit-container'));
+        circuit.start();
+    }, 0);
+}
+
+document.getElementById("logicCircuit").onclick = function () {
+    if (expression_valid) {
+
+        document.getElementById("output-title").innerHTML = "Logic Circuit";
+
+        document.getElementById("validationMessage").innerHTML = "";
+        document.getElementById("detailed-error-message").innerHTML = "";
+
+        document.getElementById("output-options").style.display = "none";
+        document.getElementById("inputSection").style.display = "none";
+        document.getElementById("detailed-output").style.display = "flex";
+
+        document.getElementById("loader").style.display = "block";
+
+        fetch('/draw-circuit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expression: expression
+                })
+            })
+            .then(response => {
+                document.getElementById("loader").style.display = "none";
+
+                if (response.status === 200) {
+                    response.text().then(text => {
+                        var circuit_div = document.createElement("div");
+                        displayVerilogCode(circuit_div, text);
+                        circuit_div.className = "logic-circuit";
+                        document.getElementById("output").appendChild(circuit_div);
+                    });
+                } else if (response.status === 400) {
+                    response.text().then(text => {
+                        document.getElementById("detailed-error-message").innerHTML = text;
+                    });
+                } else {
+                    document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+            });
+    } else {
+        document.getElementById("validationMessage").innerHTML = "Enter Valid Expression and Analyze";
+        document.getElementById("validationMessage").style.color = "red";
+    }
+
+    return false;
+}
+
 document.getElementById("back").onclick = function () {
     document.getElementById("output-options").style.display = "grid";
     document.getElementById("detailed-output").style.display = "none";
@@ -247,6 +332,12 @@ document.getElementById("back").onclick = function () {
         primeImplicants_div.remove();
     }
 
+    // Remove logic circuit
+    var circuit_div = document.getElementsByClassName("logic-circuit")[0];
+    if (circuit_div) {
+        circuit_div.remove();
+    }
+
     // remove other elements from detailed output...
 
     return false;
@@ -268,11 +359,24 @@ document.getElementById("download").addEventListener("click", function () {
         return false;
     }
 
-    html2canvas(div).then(function (canvas) {
-        var image = canvas.toDataURL("image/png");
-        console.log("printing image to console", image);
-        downloadURI(image, "alpha-logo-output.png");
-    });
+    // check if style contains overflow: scroll
+    if (div.children[0].style.overflow != "scroll") {
+        div = div.children[0].children[0];
+    } else {
+        div = div.children[0];
+    }
+
+    // make it handle scrollable divs
+    domtoimage.toPng(div, {
+            width: div.scrollWidth,
+            height: div.scrollHeight
+        })
+        .then(function (dataUrl) {
+            downloadURI(dataUrl, "alpha-logos-output.png");
+        })
+        .catch(function (error) {
+            console.error('Error:', error);
+        });
 
     return false;
 });
