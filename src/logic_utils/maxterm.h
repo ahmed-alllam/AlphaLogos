@@ -16,7 +16,7 @@ struct Maxterm {
 
 string maxtermToString(Maxterm maxterm, vector<Token> uniqueVariables);
 
-string maxtermsToString(vector<Maxterm> maxterms,
-                        vector<Token> uniqueVariables);
+string canonicalPoSToString(vector<Maxterm> maxterms,
+                            vector<Token> uniqueVariables);
 
 #endif  // MAXTERM_H

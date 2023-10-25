@@ -17,7 +17,7 @@ struct Minterm {
 
 string mintermToString(Minterm minterm, vector<Token> uniqueVariables);
 
-string mintermsToString(vector<Minterm> minterms,
-                        vector<Token> uniqueVariables);
+string canonicalSoPToString(vector<Minterm> minterms,
+                            vector<Token> uniqueVariables);
 
 #endif  // MINTERM_H

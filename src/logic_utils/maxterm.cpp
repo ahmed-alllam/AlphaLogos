@@ -25,8 +25,8 @@ string maxtermToString(Maxterm maxterm, vector<Token> uniqueVariables) {
   return maxtermString;
 }
 
-string maxtermsToString(vector<Maxterm> maxterms,
-                        vector<Token> uniqueVariables) {
+string canonicalPoSToString(vector<Maxterm> maxterms,
+                            vector<Token> uniqueVariables) {
   string maxtermsString = "";
 
   for (int i = 0; i < maxterms.size(); i++) {
