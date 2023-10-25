@@ -1,5 +1,6 @@
 #include "routes.h"
 
+#include "handlers/canonicals_handler.h"
 #include "handlers/main_handler.h"
 #include "handlers/truth_table_handler.h"
 #include "handlers/validation_handler.h"
@@ -10,7 +11,6 @@ void setup_routers(crow::SimpleApp &app) {
         main_handler(req, res);
       });
 
-  // route for validation
   CROW_ROUTE(app, "/validate")
       .methods(crow::HTTPMethod::Post)(
           [](const crow::request &req, crow::response &res) {
@@ -21,5 +21,11 @@ void setup_routers(crow::SimpleApp &app) {
       .methods(crow::HTTPMethod::Post)(
           [](const crow::request &req, crow::response &res) {
             truth_table_handler(req, res);
+          });
+
+  CROW_ROUTE(app, "/canonicals")
+      .methods(crow::HTTPMethod::Post)(
+          [](const crow::request &req, crow::response &res) {
+            canonicals_handler(req, res);
           });
 }

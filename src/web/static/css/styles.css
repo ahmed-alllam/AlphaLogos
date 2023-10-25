@@ -66,21 +66,32 @@ main {
     gap: 1rem;
 }
 
-input[type="text"] {
-    padding: 0.7rem 1.2rem;
+input {
+    padding: 0.5rem 1.2rem;
     border: 1px solid #bdc3c7;
     border-radius: 10px;
     width: 70%;
 }
 
+input[type="text"] {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    width: 70%;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
 button {
-    padding: 0.7rem 1.2rem;
+    padding: 0.8rem 1.2rem;
     background-color: #3498db;
     color: #fff;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 0.8rem;
 }
 
 button:hover {
@@ -100,19 +111,26 @@ button:hover {
 button>span {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
+    font-size: 0.9rem;
 }
 
 #detailed-output {
     display: none;
 
     flex-direction: column;
-    
 }
 
 #detailed-output #back {
-    margin-left: auto;
-    margin-right: 0;
-    
+    padding: 0.5rem 1.2rem;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#detailed-output #download {
     padding: 0.5rem 1.2rem;
     background-color: #3498db;
     color: #fff;
@@ -126,14 +144,8 @@ button>span {
     background-color: #2980b9;
 }
 
-#detailed-output #download {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    display: none;
+#detailed-output #download:hover {
+    background-color: #2980b9;
 }
 
 .loader {
@@ -167,6 +179,20 @@ button>span {
     font-size: 0.9em; 
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
+}
+
+#output-title {
+    font-size: 1.8em;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+
+    margin: 10px auto;
+}
+
+.output-details-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 
