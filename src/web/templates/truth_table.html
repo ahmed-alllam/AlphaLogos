@@ -1,0 +1,61 @@
+<table>
+    <thead>
+        <tr>
+            {% for name in variableNames %}
+                <th>{{ name }}</th>
+            {% endfor %}
+            <th>{{ logic_expression }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in truth_table %}
+            <tr>
+                {% for value in row[:-1] %}
+                    <td class="{{ 'true-value' if value else 'false-value' }}">{{ 'True' if value else 'False' }}</td>
+                {% endfor %}
+                <td class="{{ 'true-value' if row[-1] else 'false-value' }}">{{ 'True' if row[-1] else 'False' }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    table {
+        width: 60%;
+        border-collapse: collapse;
+        background-color: #f8f8f8;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 10px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #3498db;
+        color: white;
+    }
+
+    tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .true-value {
+        color: green;
+    }
+
+    .false-value {
+        color: red;
+    }
+</style>
