@@ -2,6 +2,7 @@
 
 #include "handlers/canonicals_handler.h"
 #include "handlers/main_handler.h"
+#include "handlers/prime_implicants_handler.h"
 #include "handlers/truth_table_handler.h"
 #include "handlers/validation_handler.h"
 
@@ -27,5 +28,11 @@ void setup_routers(crow::SimpleApp &app) {
       .methods(crow::HTTPMethod::Post)(
           [](const crow::request &req, crow::response &res) {
             canonicals_handler(req, res);
+          });
+
+  CROW_ROUTE(app, "/PI")
+      .methods(crow::HTTPMethod::Post)(
+          [](const crow::request &req, crow::response &res) {
+            prime_implicants_handler(req, res);
           });
 }
