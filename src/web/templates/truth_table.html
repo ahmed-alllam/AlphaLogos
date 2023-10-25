@@ -26,33 +26,40 @@
 
 
 <style>
-   table {
-    width: 60%;
-    border-collapse: separate; /* Change from collapse to separate */
-    border-spacing: 0; /* Add this to ensure borders don't get spaced out */
-    background-color: #f8f8f8;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: auto;
-    border-radius: 10px; /* Add rounded corners */
-    overflow: hidden; /* Ensure no background appears outside the rounded corners */
-}
 
-th,
-td {
-    padding: 10px 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
+    .truth-table {
+        overflow: scroll;
+    }
 
-th {
-    background-color: #3498db;
-    color: white;
-}
+    table {
+        width: 60%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: #f8f8f8;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-/* Remove the bottom border for the last row to avoid a double border at the bottom */
-tr:last-child td {
-    border-bottom: none;
-}
+    th,
+    td {
+        padding: 10px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+
+        text-wrap: nowrap;
+    }
+
+    th {
+        background-color: #3498db;
+        color: white;
+    }
+
+    /* Remove the bottom border for the last row to avoid a double border at the bottom */
+    tr:last-child td {
+        border-bottom: none;
+    }
 
 
 
