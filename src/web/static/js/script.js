@@ -52,6 +52,7 @@ document.getElementById("truthTable").onclick = function() {
         document.getElementById("detailed-error-message").innerHTML = "";
 
         document.getElementById("output-options").style.display = "none";
+        document.getElementById("inputSection").style.display = "none";
         document.getElementById("detailed-output").style.display = "flex";
 
         document.getElementById("loader").style.display = "block";
@@ -97,6 +98,8 @@ document.getElementById("truthTable").onclick = function() {
 document.getElementById("back").onclick = function() {
     document.getElementById("output-options").style.display = "grid";
     document.getElementById("detailed-output").style.display = "none";
+    document.getElementById("inputSection").style.display = "flex";
+
 
     // Remove truth table
     var truth_table_div = document.getElementsByClassName("truth-table")[0];

@@ -41,6 +41,7 @@ header {
 
 main {
     flex: 1;
+    min-width: 450px;
     max-width: 900px;
     margin: 2rem auto;
     padding: 1.5rem;
@@ -105,6 +106,7 @@ button>span {
     display: none;
 
     flex-direction: column;
+    
 }
 
 #detailed-output #back {
