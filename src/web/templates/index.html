@@ -26,44 +26,51 @@
                 <input type="text" id="booleanFunction" placeholder="e.g. abc + a’b’c">
                 <button id="analyzeFunction">Analyze</button>
             </div>
-            <div id="validationMessage" style="color: red; font-size: 0.9em;"></div>
+            <div id="validationMessage" style="padding:10px; color: red; font-size: 0.9em;"></div>
         </section>
 
         <!-- Display Section -->
         <section id="outputSection">
-            <div class="output-wrapper">
-                <div id="truthTable">
-                    <h3>Truth Table</h3>
-                    <p>Placeholder for Truth Table</p>
-                </div>
-                <div id="canonicalForms">
-                    <h3>Canonical Forms</h3>
-                    <p>Placeholder for Canonical Forms</p>
-                </div>
-                <div id="primeImplicants">
-                    <h3>Prime Implicants</h3>
-                    <p>Placeholder for Prime Implicants</p>
-                </div>
-                <div id="essentialPis">
-                    <h3>Essential Prime Implicants</h3>
-                    <p>Placeholder for Essential Prime Implicants</p>
-                </div>
-                <div id="uncoveredMinterms">
-                    <h3>Uncovered Minterms</h3>
-                    <p>Placeholder for Uncovered Minterms</p>
-                </div>
-                <div id="minimizedExpression">
-                    <h3>Minimized Expression</h3>
-                    <p>Placeholder for Minimized Expression</p>
-                </div>
-                <div id="kMap">
-                    <h3>Karnaugh Map</h3>
-                    <p>Placeholder for Karnaugh Map</p>
-                </div>
-                <div id="logicCircuit">
-                    <h3>Logic Circuit</h3>
-                    <p>Placeholder for Logic Circuit</p>
-                </div>
+            <div class="output-wrapper" id="output-options">
+                <Button id="truthTable">
+                    <span>Truth Table</span>
+                </Button>
+                <Button id="canonicalForms">
+                    <span>Canonical Forms</span>
+                </Button>
+                <Button id="primeImplicants">
+                    <span>Prime Implicants</span>
+                </Button>
+                <Button id="essentialPis">
+                    <span>Essential Prime Implicants</span>
+                </Button>
+                <Button id="uncoveredMinterms">
+                    <span>Uncovered Minterms</span>
+                </Button>
+                <Button id="minimizedExpression">
+                    <span>Minimized Expression</span>
+                </Button>
+                <Button id="kMap">
+                    <span>Karnaugh Map</span>
+                </Button>
+                <Button id="logicCircuit">
+                    <span>Logic Circuit</span>
+                </Button>
+            </div>
+
+            <div class="output-wrapper" id="detailed-output">
+                <Button id="back">
+                    <span>Back</span>
+                </Button>
+                
+                <Button id="download">
+                    <span>Download</span>
+                </Button>
+
+                <div class="loader" id="loader"></div>
+
+                <div id="detailed-error-message"></div>
+
             </div>
         </section>
     </main>
