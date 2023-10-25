@@ -3,17 +3,16 @@
 #include <fstream>
 #include <iostream>
 
+#include <inja.hpp>
+
+using namespace inja;
 using namespace std;
 
 void main_handler(const crow::request& req, crow::response& res) {
-  ifstream template_file("templates/index.html");
+  Environment env;
+  Template homePageTemplate = env.parse_template("templates/index.html");
 
-  string homePage = string(istreambuf_iterator<char>(template_file),
-                           istreambuf_iterator<char>());
-
-  Jinja2CppLight::Template homePageTemplate(homePage);
-
-  string result = homePageTemplate.render();
+  string result = env.render(homePageTemplate, {});
 
   res.set_header("Content-Type", "text/html");
   res.write(result);

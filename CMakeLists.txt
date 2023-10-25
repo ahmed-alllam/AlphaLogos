@@ -7,7 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 link_directories(/usr/local/lib)
 
 # Set C++ standard (e.g., C++11, C++14, C++17)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
+
 
 # Find all .cpp and .h files in the src directory and its subdirectories
 file(GLOB_RECURSE SOURCE_FILES
@@ -17,7 +18,9 @@ file(GLOB_RECURSE SOURCE_FILES
 
 file(GLOB_RECURSE HEADER_FILES
     "include/*.h"
+    "include/*.hpp"
     "include/**/*.h"
+    "include/**/*.hpp"
 )
 
 
@@ -84,12 +87,6 @@ target_link_libraries(AlphaLogos ${CMAKE_THREAD_LIBS_INIT})
 
 find_package(Crow)
 target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
-
-
-target_link_libraries(AlphaLogos PUBLIC Jinja2CppLight)
-
-
-
 
 
 
