@@ -2,6 +2,7 @@
 
 #include "handlers/canonicals_handler.h"
 #include "handlers/circuit_drawer_handler.h"
+#include "handlers/kmap_handler.h"
 #include "handlers/main_handler.h"
 #include "handlers/prime_implicants_handler.h"
 #include "handlers/truth_table_handler.h"
@@ -41,5 +42,11 @@ void setup_routers(crow::SimpleApp &app) {
       .methods(crow::HTTPMethod::Post)(
           [](const crow::request &req, crow::response &res) {
             circuit_drawer_handler(req, res);
+          });
+
+  CROW_ROUTE(app, "/draw-kmap")
+      .methods(crow::HTTPMethod::Post)(
+          [](const crow::request &req, crow::response &res) {
+            kmap_handler(req, res);
           });
 }
