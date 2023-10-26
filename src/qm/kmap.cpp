@@ -216,7 +216,7 @@ string generateLatexForImplicant(Implicant implicant, int num_vars) {
       }
     }
 
-    if (minterms[0] + 1 != minterms[1]) {
+    if (abs(minterms[0] - minterms[1]) == 1) {
       s += "{" + to_string(order[minRow * num_cols + minCol]) + "}{" +
            to_string(order[maxRow * num_cols + minCol]) + "}{" +
            to_string(order[minRow * num_cols + maxCol]) + "}{" +
@@ -249,7 +249,8 @@ string makeKMapLaTeX(vector<Implicant> primeImplicants,
   string latex = R"(
 
 
-  \documentclass[tikz, border=2mm]{standalone}
+  \documentclass{article}
+  \pagestyle{empty}
   \usepackage{karnaugh-map}
 
   \begin{document}

@@ -203,6 +203,12 @@ button>span {
     overflow: scroll;
 }
 
+.kmap-container {
+    width: 600px;
+    overflow: scroll;
+    padding: 15px;
+}
+
 svg {
     width: 100%;
     height: 100%;

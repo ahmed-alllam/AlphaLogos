@@ -10,6 +10,8 @@
 
 using namespace std;
 
+// ToDo: remove redundant PIs
+
 vector<vector<string>> makeKMap(vector<Implicant> primeImplicants,
                                 vector<Token> variableTokens,
                                 vector<Minterm> minterms);

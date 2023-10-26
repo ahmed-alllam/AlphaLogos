@@ -36,7 +36,7 @@ void launch_server() {
   crow::SimpleApp app;
   setup_routers(app);
 
-  auto _a = app.port(8003).multithreaded().run_async();
+  auto _a = app.port(8000).multithreaded().run_async();
   std::cout << "Server is running on port 8000" << std::endl;
 
   // open_browser("http://localhost:8000"); // ToDo: uncomment this line later

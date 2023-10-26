@@ -308,6 +308,60 @@ document.getElementById("logicCircuit").onclick = function () {
     return false;
 }
 
+document.getElementById("KMap").onclick = function () {
+    if (expression_valid) {
+
+        document.getElementById("output-title").innerHTML = "Karnaugh Map";
+
+        document.getElementById("validationMessage").innerHTML = "";
+        document.getElementById("detailed-error-message").innerHTML = "";
+
+        document.getElementById("output-options").style.display = "none";
+        document.getElementById("inputSection").style.display = "none";
+        document.getElementById("detailed-output").style.display = "flex";
+
+        document.getElementById("loader").style.display = "block";
+
+        fetch('/draw-kmap', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expression: expression
+                })
+            })
+            .then(response => {
+                document.getElementById("loader").style.display = "none";
+
+                if (response.status === 200) {
+                    response.text().then(text => {
+                        var kmap_div = document.createElement("div");
+                        kmap_div.className = "kmap-container";
+                        kmap_div.innerHTML = text;
+                        document.getElementById("output").appendChild(kmap_div);
+                    });
+                } else if (response.status === 400) {
+                    response.text().then(text => {
+                        document.getElementById("detailed-error-message").innerHTML = text;
+                    });
+                } else {
+                    document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+            });
+    } else {
+        document.getElementById("validationMessage").innerHTML = "Enter Valid Expression and Analyze";
+        document.getElementById("validationMessage").style.color = "red";
+    }
+
+    return false;
+}
+
 document.getElementById("back").onclick = function () {
     document.getElementById("output-options").style.display = "grid";
     document.getElementById("detailed-output").style.display = "none";
@@ -336,6 +390,12 @@ document.getElementById("back").onclick = function () {
     var circuit_div = document.getElementsByClassName("logic-circuit")[0];
     if (circuit_div) {
         circuit_div.remove();
+    }
+
+    // Remove KMap
+    var kmap_div = document.getElementsByClassName("kmap-container")[0];
+    if (kmap_div) {
+        kmap_div.remove();
     }
 
     // remove other elements from detailed output...
