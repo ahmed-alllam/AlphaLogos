@@ -22,11 +22,12 @@ string generate_kmap(vector<Implicant> primeImplicants,
 
   ofstream kmapFile;
   string randomString = to_string(rand());
-  kmapFile.open("kmap" + randomString + ".tex");  // + " > /dev/null 2>&1");
+  kmapFile.open("kmap" + randomString + ".tex");
   kmapFile << kmapLaTeX;
   kmapFile.close();
 
-  string command = "pdflatex kmap" + randomString + ".tex";
+  string command =
+      "pdflatex kmap" + randomString + ".tex" + " > /dev/null 2>&1";
 
   int result = system(command.c_str());
 
@@ -35,7 +36,7 @@ string generate_kmap(vector<Implicant> primeImplicants,
   }
 
   command = "inkscape kmap" + randomString + ".pdf --export-plain-svg=kmap" +
-            randomString + ".svg --export-area-drawing" + " > /dev/null 2>&1";
+            randomString + ".svg" + " > /dev/null 2>&1";
 
   result = system(command.c_str());
 
@@ -50,7 +51,7 @@ string generate_kmap(vector<Implicant> primeImplicants,
 
   command = "rm kmap" + randomString + ".tex kmap" + randomString +
             ".pdf kmap" + randomString + ".svg" + " > /dev/null 2>&1";
-  // result = system(command.c_str());
+  result = system(command.c_str());
 
   return kmapSVG;
 }
