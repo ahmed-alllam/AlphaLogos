@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 link_directories(/usr/local/lib)
 
 # Set C++ standard (e.g., C++11, C++14, C++17)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 
 # Find all .cpp and .h files in the src directory and its subdirectories
@@ -101,6 +101,9 @@ target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
 endif()
 
 
+option(BUILD_ONLY_RELEASE "Build only main app without any tests" OFF)
+
+if(NOT BUILD_ONLY_RELEASE)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -138,3 +141,5 @@ add_custom_target(run_tests
     COMMAND AlphaLogosTests
     DEPENDS AlphaLogosTests
 )
+
+endif()

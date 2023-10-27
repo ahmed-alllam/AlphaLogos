@@ -20,6 +20,8 @@ string join(vector<string> items, string delimiter) {
   return result.str();
 }
 
+// ToDo: take the minimized expression
+
 string SoPToWaveJSON(vector<Token> tokens) {
   ostringstream json_output;
 
@@ -77,6 +79,10 @@ string SoPToWaveJSON(vector<Token> tokens) {
 
   return json_output.str();
 }
+
+
+// ToDo: take the minimized expression
+
 
 string SoPToVerilog(vector<Token> tokens) {
   ostringstream verilog_output;
