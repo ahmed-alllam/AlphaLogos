@@ -10,7 +10,6 @@ using namespace std;
 
 struct Implicant {
   vector<int> minterms;
-  vector<int> qm_minterms = minterms;
   vector<int> binary;
   bool is_prime;
   bool is_essential;
@@ -35,6 +34,7 @@ struct Implicant {
 
     return true;
   }
+  vector<int> qm_minterms = minterms;
 };
 
 string implicantToString(const Implicant &implicant,
