@@ -1,12 +1,16 @@
 #define CATCH_CONFIG_MAIN
+#include <algorithm>
 #include <catch2/catch_test_macros.hpp>
 
 #include "../src/qm/uncovered_minterms.h"
 
 void compareMinterms(const vector<Minterm>& output,
                      const vector<Minterm>& expected) {
-  sort(output.begin(), output.end());
-  sort(expected.begin(), expected.end());
+  sort(output.begin(), output.end(),
+       [](const Minterm& a, const Minterm& b) { return a.index < b.index; });
+  sort(expected.begin(), expected.end(),
+       [](const Minterm& a, const Minterm& b) { return a.index < b.index; });
+
   REQUIRE(output.size() == expected.size());
 
   for (const auto& expected_minterm : expected) {
