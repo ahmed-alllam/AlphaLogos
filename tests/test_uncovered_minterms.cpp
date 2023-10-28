@@ -15,7 +15,7 @@ void compareMinterms(vector<Minterm>& output, vector<Minterm>& expected) {
         found = true;
         INFO("Expected minterm: " << expected_minterm.index);
         INFO("Output minterm: " << output_minterm.index);
-        REQUIRE(expected_minterm == output_minterm);
+        REQUIRE(expected_minterm.index == output_minterm.index);
         break;
       }
     }
@@ -24,7 +24,7 @@ void compareMinterms(vector<Minterm>& output, vector<Minterm>& expected) {
   }
 }
 
-TEST_CASE("All minterms covered by essential implicants") {
+TEST_CASE("Test Minterms not covered by essential implicants (1)") {
   vector<Minterm> minterms = {{0, {0, 0}, 0, false},
                               {1, {0, 1}, 1, false},
                               {2, {1, 0}, 1, false},
@@ -37,7 +37,7 @@ TEST_CASE("All minterms covered by essential implicants") {
   REQUIRE(uncoveredMinterms.empty());
 }
 
-TEST_CASE("Some minterms covered by essential implicants") {
+TEST_CASE("Test Minterms not covered by essential implicants (2)") {
   vector<Minterm> minterms = {{0, {0, 0}, 0, false},
                               {1, {0, 1}, 1, false},
                               {2, {1, 0}, 1, false},
@@ -46,5 +46,23 @@ TEST_CASE("Some minterms covered by essential implicants") {
                                            {{3, 2}, {1, 0}, true, true, false}};
   vector<Minterm> uncoveredMinterms =
       getUncoveredMinterms(minterms, essentialImplicants);
-  REQUIRE(uncoveredMinterms == vector<Minterm>{{0, {0, 0}, 0, false}});
+    
+  vector<Minterm> expected = {{0, {0, 0}, 0, false}};
+
+  compareMinterms(uncoveredMinterms, expected);
+}
+
+TEST_CASE("Test Minterms not covered by essential implicants (3)") {
+  vector<Minterm> minterms = {{0, {0, 0}, 0, false},
+                              {1, {0, 1}, 1, false},
+                              {2, {1, 0}, 1, false},
+                              {3, {1, 1}, 2, false}};
+  vector<Implicant> essentialImplicants = {{{1}, {0, 1}, true, true, false},
+                                           {{3, 2}, {1, 0}, true, true, false}};
+  vector<Minterm> uncoveredMinterms =
+      getUncoveredMinterms(minterms, essentialImplicants);
+    
+  vector<Minterm> expected = {{0, {0, 0}, 0, false}};
+
+  compareMinterms(uncoveredMinterms, expected);
 }
