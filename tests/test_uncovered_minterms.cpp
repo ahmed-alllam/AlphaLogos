@@ -4,18 +4,17 @@
 
 #include "../src/qm/uncovered_minterms.h"
 
-void compareMinterms(const vector<Minterm>& output,
-                     const vector<Minterm>& expected) {
+void compareMinterms(vector<Minterm>& output, vector<Minterm>& expected) {
   sort(output.begin(), output.end(),
-       [](const Minterm& a, const Minterm& b) { return a.index < b.index; });
+       [](Minterm& a, Minterm& b) { return a.index < b.index; });
   sort(expected.begin(), expected.end(),
-       [](const Minterm& a, const Minterm& b) { return a.index < b.index; });
+       [](Minterm& a, Minterm& b) { return a.index < b.index; });
 
   REQUIRE(output.size() == expected.size());
 
-  for (const auto& expected_minterm : expected) {
+  for (auto& expected_minterm : expected) {
     bool found = false;
-    for (const auto& output_minterm : output) {
+    for (auto& output_minterm : output) {
       if (expected_minterm.index == output_minterm.index) {
         found = true;
         INFO("Expected minterm: " << expected_minterm.index);
