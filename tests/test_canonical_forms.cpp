@@ -20,8 +20,8 @@ TEST_CASE("Validation of canonical SoP and PoS of  A + B * C' ") {
 
   vector<Maxterm> maxterms = generateMaxTerms(uniqueVariables, truthTable);
 
-  string mintermsString = mintermsToString(minterms, uniqueVariables);
-  string maxtermsString = maxtermsToString(maxterms, uniqueVariables);
+  string mintermsString = canonicalSoPToString(minterms, uniqueVariables);
+  string maxtermsString = canonicalPoSToString(maxterms, uniqueVariables);
 
   REQUIRE(mintermsString == "AB'C'+A'BC'+ABC'+AB'C+ABC");
   REQUIRE(maxtermsString == "(A+B+C)(A+B+C')(A+B'+C')");
@@ -38,8 +38,8 @@ TEST_CASE("Validation of canonical SoP and PoS of  a'bc + ab' + bc' ") {
 
   vector<Maxterm> maxterms = generateMaxTerms(uniqueVariables, truthTable);
 
-  string mintermsString = mintermsToString(minterms, uniqueVariables);
-  string maxtermsString = maxtermsToString(maxterms, uniqueVariables);
+  string mintermsString = canonicalSoPToString(minterms, uniqueVariables);
+  string maxtermsString = canonicalPoSToString(maxterms, uniqueVariables);
 
   REQUIRE(mintermsString == "ab'c'+a'bc'+abc'+ab'c+a'bc");
   REQUIRE(maxtermsString == "(a+b+c)(a+b+c')(a'+b'+c')");
@@ -56,8 +56,8 @@ TEST_CASE("Validation of canonical SoP and PoS of  a+b+c+d ") {
 
   vector<Maxterm> maxterms = generateMaxTerms(uniqueVariables, truthTable);
 
-  string mintermsString = mintermsToString(minterms, uniqueVariables);
-  string maxtermsString = maxtermsToString(maxterms, uniqueVariables);
+  string mintermsString = canonicalSoPToString(minterms, uniqueVariables);
+  string maxtermsString = canonicalPoSToString(maxterms, uniqueVariables);
 
   REQUIRE(mintermsString ==
           "ab'c'd'+a'bc'd'+abc'd'+a'b'cd'+ab'cd'+a'bcd'+abcd'+a'b'c'd+ab'c'd+a'"
