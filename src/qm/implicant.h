@@ -34,7 +34,6 @@ struct Implicant {
 
     return true;
   }
-  vector<int> qm_minterms = minterms;
 };
 
 string implicantToString(const Implicant &implicant,
