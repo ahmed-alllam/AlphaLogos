@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_MAIN
+
 #include <algorithm>
 #include <catch2/catch_test_macros.hpp>
+#include <vector>
 
 #include "../src/qm/uncovered_minterms.h"
 
@@ -50,6 +52,5 @@ TEST_CASE("Some minterms covered by essential implicants") {
                                            {{3, 2}, {1, 0}, true, true, false}};
   vector<Minterm> uncoveredMinterms =
       getUncoveredMinterms(minterms, essentialImplicants);
-  REQUIRE(uncoveredMinterms == vector<Minterm>{{0, {0, 0}, 0, false}});
   compareMinterms(uncoveredMinterms, vector<Minterm>{{0, {0, 0}, 0, false}});
 }
