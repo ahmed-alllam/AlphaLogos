@@ -4,26 +4,23 @@
 #include "../src/qm/uncovered_minterms.h"
 
 void compareMinterms(const vector<Minterm>& output,
-                     const vector<Minterm>& expected,
-                     vector<Token> variableTokens) {
+                     const vector<Minterm>& expected) {
+  sort(output.begin(), output.end());
+  sort(expected.begin(), expected.end());
   REQUIRE(output.size() == expected.size());
 
-  // find the minterm in output that matches the minterm in expected
   for (const auto& expected_minterm : expected) {
     bool found = false;
     for (const auto& output_minterm : output) {
       if (expected_minterm.index == output_minterm.index) {
         found = true;
-        INFO("Expected minterm: " << mintermToString(expected_minterm,
-                                                     variableTokens));
-        INFO("Output minterm: " << mintermToString(output_minterm,
-                                                   variableTokens));
+        INFO("Expected minterm: " << expected_minterm.index);
+        INFO("Output minterm: " << output_minterm.index);
         REQUIRE(expected_minterm == output_minterm);
         break;
       }
     }
-    INFO("Expected not found minterm: " << mintermToString(expected_minterm,
-                                                           variableTokens));
+    INFO("Expected minterm not found: " << expected_minterm.index);
     REQUIRE(found);
   }
 }
@@ -51,4 +48,5 @@ TEST_CASE("Some minterms covered by essential implicants") {
   vector<Minterm> uncoveredMinterms =
       getUncoveredMinterms(minterms, essentialImplicants);
   REQUIRE(uncoveredMinterms == vector<Minterm>{{0, {0, 0}, 0, false}});
+  compareMinterms(uncoveredMinterms, vector<Minterm>{{0, {0, 0}, 0, false}});
 }
