@@ -2,16 +2,10 @@
 
 #include <algorithm>
 #include <catch2/catch_test_macros.hpp>
-#include <vector>
 
 #include "../src/qm/uncovered_minterms.h"
 
 void compareMinterms(vector<Minterm>& output, vector<Minterm>& expected) {
-  sort(output.begin(), output.end(),
-       [](Minterm& a, Minterm& b) { return a.index < b.index; });
-  sort(expected.begin(), expected.end(),
-       [](Minterm& a, Minterm& b) { return a.index < b.index; });
-
   REQUIRE(output.size() == expected.size());
 
   for (auto& expected_minterm : expected) {
@@ -52,5 +46,5 @@ TEST_CASE("Some minterms covered by essential implicants") {
                                            {{3, 2}, {1, 0}, true, true, false}};
   vector<Minterm> uncoveredMinterms =
       getUncoveredMinterms(minterms, essentialImplicants);
-  compareMinterms(uncoveredMinterms, vector<Minterm>{{0, {0, 0}, 0, false}});
+  REQUIRE(uncoveredMinterms == vector<Minterm>{{0, {0, 0}, 0, false}});
 }
