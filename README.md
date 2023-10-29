@@ -22,7 +22,7 @@
 <h3 align="center">AlphaLogos: Logic Synthesis Optimization</h3>
 
   <p align="center">
-    <a href="http://alphalogos2-516469619.eu-west-3.elb.amazonaws.com/">View Demo</a>
+    <a href="http://alpha-logos-1464863388.eu-west-3.elb.amazonaws.com/">View Demo</a>
     ·
     <a href="https://github.com/ahmed-alllam/AlphaLogos/issues">Report Bug</a>
     ·
@@ -36,7 +36,7 @@
 
 ## About The Project
 
-AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and optimizes it using the Quinn-McCluskey algorithm. You can access the project demo using this [link](http://alphalogos2-516469619.eu-west-3.elb.amazonaws.com/).
+AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and optimizes it using the Quinn-McCluskey algorithm. You can access the project demo using this [link](http://alpha-logos-1464863388.eu-west-3.elb.amazonaws.com/).
 
 > **Note**
 > This project is still under development and is not yet ready for deployment!

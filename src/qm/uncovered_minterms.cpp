@@ -4,8 +4,8 @@
 
 using namespace std;
 
+#include "../logic_utils/minterm.h"
 #include "implicant.h"
-#include "minterm.h"
 
 vector<Minterm> getUncoveredMinterms(
     vector<Minterm>& minterms, const vector<Implicant>& essentialImplicants) {

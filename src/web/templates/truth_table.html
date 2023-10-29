@@ -1,0 +1,86 @@
+<table>
+    <thead>
+        <tr>
+            {% for name in variableNames %}
+            <th>{{ name }}</th>
+            {% endfor %}
+            <th>{{ logic_expression }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in truth_table %}
+        <tr>
+            {% for value in row %}
+
+            {% if value %}
+            <td class="true-value">True</td>
+            {% else %}
+            <td class="false-value">False</td>
+            {% endif %}
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<style>
+
+    .truth-table {
+        overflow: scroll;
+
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    table {
+        width: 60%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: #f8f8f8;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        border-radius: 10px;
+        overflow: hidden;
+
+        font-family: 'Poppins', sans-serif !important;
+
+    }
+
+    th,
+    td {
+        padding: 10px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+
+        text-wrap: nowrap;
+        white-space: nowrap;
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    th {
+        background-color: #3498db;
+        color: white;
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    /* Remove the bottom border for the last row to avoid a double border at the bottom */
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+
+
+
+    tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .true-value {
+        color: green;
+    }
+
+    .false-value {
+        color: red;
+    }
+</style>

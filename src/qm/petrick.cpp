@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "../logic_utils/minterm.h"
+#include "essential_prime_implicants.h"
 #include "implicant.h"
 #include "petrick.h"
 
@@ -19,40 +20,6 @@ vector<Implicant> removeImplicants(
                  result.end());
   }
   return result;
-}
-
-bool compareImplicants(const Implicant& a, const Implicant& b) {
-  if (a.minterms.size() != b.minterms.size()) {
-    return a.minterms.size() < b.minterms.size();
-  }
-  return std::lexicographical_compare(a.minterms.begin(), a.minterms.end(),
-                                      b.minterms.begin(), b.minterms.end());
-}
-
-vector<Implicant> generateEssentialPrimeImplicants(
-    const vector<Implicant>& primeImplicants) {
-  vector<Implicant> essentialImplicants;
-  map<int, vector<const Implicant*>> mintermToImplicantMap;
-
-  for (const auto& implicant : primeImplicants) {
-    for (const int minterm : implicant.minterms) {
-      mintermToImplicantMap[minterm].push_back(&implicant);
-    }
-  }
-
-  for (const auto& pair : mintermToImplicantMap) {
-    if (pair.second.size() == 1) {
-      Implicant essentialImplicant = *(pair.second[0]);
-      if (std::find(essentialImplicants.begin(), essentialImplicants.end(),
-                    essentialImplicant) == essentialImplicants.end()) {
-        essentialImplicants.push_back(essentialImplicant);
-      }
-    }
-  }
-
-  std::sort(essentialImplicants.begin(), essentialImplicants.end(),
-            compareImplicants);
-  return essentialImplicants;
 }
 
 vector<Implicant> removeDuplicateImplicants(
@@ -251,34 +218,4 @@ vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
   }
 
   return removeDuplicateImplicants(solution);
-}
-
-int main() {
-  // Sample prime implicants
-  std::vector<Implicant> implicants = {
-      {{0, 2, 4, 6}, {0, -1, -1, 0}, false, false, false},
-      {{0, 1, 8, 9}, {-1, 0, 0, -1}, false, false, false},
-      {{9, 11, 13, 15}, {1, -1, -1, 1}, false, false, false},
-  };
-
-  // Print the original prime implicants
-  std::cout << "Original prime implicants:" << std::endl;
-  for (const auto& implicant : implicants) {
-    std::cout << "Minterms: ";
-    for (const auto& minterm : implicant.minterms) {
-      std::cout << minterm << " ";
-    }
-    std::cout << std::endl;
-  }
-
-  vector<Implicant> copy_implicants = petrick(implicants);
-  // Print the modified implicants
-  cout << "Finalised answer: " << endl;
-  for (const auto& implicant : copy_implicants) {
-    cout << "Implicant: ";
-    for (const auto& m : implicant.binary) {
-      cout << m << " ";
-    }
-    cout << endl;
-  }
 }

@@ -7,7 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 link_directories(/usr/local/lib)
 
 # Set C++ standard (e.g., C++11, C++14, C++17)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
 
 # Find all .cpp and .h files in the src directory and its subdirectories
 file(GLOB_RECURSE SOURCE_FILES
@@ -17,7 +18,9 @@ file(GLOB_RECURSE SOURCE_FILES
 
 file(GLOB_RECURSE HEADER_FILES
     "include/*.h"
+    "include/*.hpp"
     "include/**/*.h"
+    "include/**/*.hpp"
 )
 
 
@@ -86,12 +89,6 @@ find_package(Crow)
 target_link_libraries(AlphaLogos PUBLIC Crow::Crow)
 
 
-target_link_libraries(AlphaLogos PUBLIC Jinja2CppLight)
-
-
-
-
-
 
 # Specify any compiler-specific options or flags
 # target_compile_options(AlphaLogos PRIVATE -Wall -Wextra)
@@ -104,6 +101,9 @@ target_link_libraries(AlphaLogos PUBLIC Jinja2CppLight)
 endif()
 
 
+option(BUILD_ONLY_RELEASE "Build only main app without any tests" OFF)
+
+if(NOT BUILD_ONLY_RELEASE)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -141,3 +141,5 @@ add_custom_target(run_tests
     COMMAND AlphaLogosTests
     DEPENDS AlphaLogosTests
 )
+
+endif()
