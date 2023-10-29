@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <map>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -8,27 +9,79 @@ using namespace std;
 #include "../logic_utils/minterm.h"
 #include "implicant.h"
 
-vector<Implicant> removeDominatedRows(
-    const std::vector<Implicant>& implicants) {
-  std::vector<Implicant> result;
-  std::vector<bool> isDominated(implicants.size(), false);
+vector<Implicant> removeImplicants(
+    const vector<Implicant>& source,
+    const vector<Implicant>& implicantsToRemove) {
+  vector<Implicant> result = source;
+  for (const auto& toRemove : implicantsToRemove) {
+    result.erase(std::remove(result.begin(), result.end(), toRemove),
+                 result.end());
+  }
+  return result;
+}
 
-  for (int i = 0; i < implicants.size(); i++) {
-    if (isDominated[i]) {
-      continue;  // Skip implicants marked as dominated
+bool compareImplicants(const Implicant& a, const Implicant& b) {
+  if (a.minterms.size() != b.minterms.size()) {
+    return a.minterms.size() < b.minterms.size();
+  }
+  return std::lexicographical_compare(a.minterms.begin(), a.minterms.end(),
+                                      b.minterms.begin(), b.minterms.end());
+}
+
+vector<Implicant> generateEssentialPrimeImplicants(
+    const vector<Implicant>& primeImplicants) {
+  vector<Implicant> essentialImplicants;
+  map<int, vector<const Implicant*>> mintermToImplicantMap;
+
+  for (const auto& implicant : primeImplicants) {
+    for (const int minterm : implicant.minterms) {
+      mintermToImplicantMap[minterm].push_back(&implicant);
     }
+  }
 
-    for (int j = 0; j < implicants.size(); j++) {
+  for (const auto& pair : mintermToImplicantMap) {
+    if (pair.second.size() == 1) {
+      Implicant essentialImplicant = *(pair.second[0]);
+      if (std::find(essentialImplicants.begin(), essentialImplicants.end(),
+                    essentialImplicant) == essentialImplicants.end()) {
+        essentialImplicants.push_back(essentialImplicant);
+      }
+    }
+  }
+
+  std::sort(essentialImplicants.begin(), essentialImplicants.end(),
+            compareImplicants);
+  return essentialImplicants;
+}
+
+vector<Implicant> removeDuplicateImplicants(
+    const vector<Implicant>& implicants) {
+  vector<Implicant> result;
+
+  for (const Implicant& implicant : implicants) {
+    if (std::find(result.begin(), result.end(), implicant) == result.end()) {
+      result.push_back(implicant);
+    }
+  }
+
+  return result;
+}
+
+vector<Implicant> removeDominatedRows(const vector<Implicant>& implicants) {
+  vector<Implicant> result;
+
+  for (size_t i = 0; i < implicants.size(); ++i) {
+    bool isDominated = false;
+    for (size_t j = 0; j < implicants.size(); ++j) {
       if (i != j && std::includes(implicants[j].minterms.begin(),
                                   implicants[j].minterms.end(),
                                   implicants[i].minterms.begin(),
                                   implicants[i].minterms.end())) {
-        isDominated[i] = true;
+        isDominated = true;
         break;
       }
     }
-
-    if (!isDominated[i]) {
+    if (!isDominated) {
       result.push_back(implicants[i]);
     }
   }
@@ -126,12 +179,86 @@ vector<Implicant> removeDominatingMinterms(vector<Implicant>& implicants,
   return filteredImplicants;
 }
 
+std::vector<int> getUniqueMinterms(std::vector<Implicant>& implicants) {
+  std::unordered_set<int> uniqueMintermsSet;
+
+  // Iterate over each implicant
+  for (const auto& implicant : implicants) {
+    // Add minterms to the set to ensure uniqueness
+    for (int minterm : implicant.minterms) {
+      uniqueMintermsSet.insert(minterm);
+    }
+  }
+
+  // Convert the set to a vector
+  std::vector<int> uniqueMinterms(uniqueMintermsSet.begin(),
+                                  uniqueMintermsSet.end());
+
+  return uniqueMinterms;
+}
+
+vector<Implicant> removeMinterms(vector<Implicant>& implicants,
+                                 const vector<int>& mintermsToRemove) {
+  for (auto& implicant : implicants) {
+    // Create a copy of the implicant's minterms
+    vector<int> updatedMinterms = implicant.minterms;
+
+    // Iterate over the minterms to remove
+    for (const auto& mintermToRemove : mintermsToRemove) {
+      // Find and remove the minterm from the updated minterms
+      auto it =
+          find(updatedMinterms.begin(), updatedMinterms.end(), mintermToRemove);
+      if (it != updatedMinterms.end()) {
+        updatedMinterms.erase(it);
+      }
+    }
+
+    // Update the implicant's minterms
+    implicant.minterms = updatedMinterms;
+  }
+
+  return implicants;
+}
+
+void printImplicant(vector<Implicant> v) {
+  cout << "The vector of implicant are: " << endl;
+  for (int i = 0; i < v.size(); i++) {
+    for (int j = 0; j < v[i].binary.size(); j++) {
+      cout << v[i].binary[j] << " ";
+    }
+    cout << endl;
+  }
+}
+
+vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
+  vector<Implicant> copy_implicants = primeImplicant;
+  vector<Implicant> solution;
+
+  while (!copy_implicants.empty()) {
+    vector<Implicant> temp_epi =
+        generateEssentialPrimeImplicants(copy_implicants);
+    solution.insert(solution.end(), temp_epi.begin(), temp_epi.end());
+
+    copy_implicants = removeImplicants(copy_implicants, temp_epi);
+    copy_implicants =
+        removeMinterms(copy_implicants, getUniqueMinterms(temp_epi));
+    copy_implicants = removeDuplicateImplicants(copy_implicants);
+    copy_implicants = removeDominatedRows(copy_implicants);
+    copy_implicants = removeDominatingMinterms(
+        copy_implicants,
+        findDominatingMinterms(associatePrimeImplicants(copy_implicants)));
+  }
+
+  return removeDuplicateImplicants(solution);
+}
+
 int main() {
   // Sample prime implicants
   std::vector<Implicant> implicants = {
-      {{2, 3}, {0, 1, -1}, true, false, false},
-      {{2, 3, 6, 7}, {-1, 1, -1}, true, false, false},
-      {{3, 7}, {-1, 1, 1}, true, false, false}};
+      {{0, 2, 4, 6}, {0, -1, -1, 0}, false, false, false},
+      {{0, 1, 8, 9}, {-1, 0, 0, -1}, false, false, false},
+      {{9, 11, 13, 15}, {1, -1, -1, 1}, false, false, false},
+  };
 
   // Print the original prime implicants
   std::cout << "Original prime implicants:" << std::endl;
@@ -143,64 +270,14 @@ int main() {
     std::cout << std::endl;
   }
 
-  cout << "-----------------------" << endl;
-
-  std::vector<std::pair<int, std::vector<std::vector<int>>>> result =
-      associatePrimeImplicants(implicants);
-
-  // Display the associated prime implicants for each minterm
-  for (const auto& entry : result) {
-    int minterm = entry.first;
-    const std::vector<std::vector<int>>& primeImplicants = entry.second;
-
-    std::cout << "Minterm " << minterm << std::endl;
-    std::cout << "Associated prime implicants: ";
-    for (const std::vector<int>& implicant : primeImplicants) {
-      std::cout << "(";
-      for (int bit : implicant) {
-        std::cout << bit << " ";
-      }
-      std::cout << ") ";
-    }
-    std::cout << std::endl << std::endl;
-  }
-  cout << "------------------------------" << endl;
-  std::vector<int> dominatingMinterms = findDominatingMinterms(result);
-
-  std::cout << "Dominating Minterms: ";
-  for (int minterm : dominatingMinterms) {
-    std::cout << minterm << " ";
-  }
-  std::cout << std::endl;
-
-  vector<Implicant> filter_implicants =
-      removeDominatingMinterms(implicants, dominatingMinterms);
-
-  std::cout << "Remaining Implicants after removing dominating minterms:"
-            << std::endl;
-  for (const Implicant& implicant : filter_implicants) {
-    std::cout << "Minterms: ";
-    for (int minterm : implicant.minterms) {
-      std::cout << minterm << " ";
-    }
-    std::cout << std::endl;
-  }
-
-  vector<Implicant> copy_implicants = implicants;
-  int m = 5;
-  while (m--) {
-    copy_implicants = removeDominatedRows(copy_implicants);
-    copy_implicants = removeDominatingMinterms(
-        copy_implicants,
-        findDominatingMinterms(associatePrimeImplicants(implicants)));
-  }
+  vector<Implicant> copy_implicants = petrick(implicants);
   // Print the modified implicants
+  cout << "Finalised answer: " << endl;
   for (const auto& implicant : copy_implicants) {
     cout << "Implicant: ";
-    for (const auto& m : implicant.minterms) {
+    for (const auto& m : implicant.binary) {
       cout << m << " ";
     }
     cout << endl;
-    return 0;
   }
 }
