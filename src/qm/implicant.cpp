@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string implicantToString(const Implicant &implicant,
+string implicantToString(const Implicant& implicant,
                          vector<Token> variableTokens) {
   string result;
 
@@ -22,4 +22,19 @@ string implicantToString(const Implicant &implicant,
   }
 
   return result;
+}
+
+ostream& operator<<(ostream& os, const Implicant& imp) {
+  os << "{ Minterms: [";
+  for (const auto& m : imp.minterms) {
+    os << m << ",";
+  }
+  os << "], Binary: [";
+  for (const auto& b : imp.binary) {
+    os << b << ",";
+  }
+  os << "], is_prime: " << imp.is_prime;
+  os << ", is_essential: " << imp.is_essential;
+  os << ", is_checked: " << imp.is_checked << " }";
+  return os;
 }
