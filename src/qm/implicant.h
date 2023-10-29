@@ -2,6 +2,7 @@
 #define IMPLICANT_H
 
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 #include "../logic_utils/token.h"
@@ -15,7 +16,7 @@ struct Implicant {
   bool is_essential;
   bool is_checked;
 
-  bool operator==(const Implicant &other) const {
+  bool operator==(const Implicant& other) const {
     if (minterms.size() != other.minterms.size()) {
       return false;
     }
@@ -34,9 +35,11 @@ struct Implicant {
 
     return true;
   }
+
+  friend ostream& operator<<(ostream& os, const Implicant& imp);
 };
 
-string implicantToString(const Implicant &implicant,
+string implicantToString(const Implicant& implicant,
                          vector<Token> variableTokens);
 
 #endif  // IMPLICANT_H
