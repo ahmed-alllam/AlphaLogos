@@ -8,6 +8,7 @@ using namespace std;
 
 #include "../logic_utils/minterm.h"
 #include "implicant.h"
+#include "petrick.h"
 
 vector<Implicant> removeImplicants(
     const vector<Implicant>& source,
