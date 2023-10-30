@@ -38,6 +38,8 @@ vector<Implicant> removeMinterms(vector<Implicant>& implicants,
 
 void printImplicant(vector<Implicant> v);
 
+vector<Implicant> removeEmptyImplicants(const vector<Implicant>& implicants);
+
 vector<Implicant> petrick(const vector<Implicant>& primeImplicant);
 
 #endif  // PETRICK_H
