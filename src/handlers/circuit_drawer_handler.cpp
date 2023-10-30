@@ -81,6 +81,14 @@ void circuit_drawer_handler(const crow::request &req, crow::response &res) {
   vector<Token> uniqueVariables = getUniqueVariables(tokens);
   vector<vector<bool>> truthTable = generateTruthTable(tokens);
   vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
+
+  if (minTerms.size() > 32) {
+    res.code = 400;
+    res.write("Too Many Minterms");
+    res.end();
+    return;
+  }
+
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
   vector<Implicant> minimizedImplicants = petrick(primeImplicants);
 
