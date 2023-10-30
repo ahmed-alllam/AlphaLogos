@@ -11,7 +11,9 @@
 #include "../logic_utils/minterm.h"
 #include "essential_prime_implicants.h"
 #include "implicant.h"
+
 using namespace std;
+
 vector<Implicant> removeImplicants(const vector<Implicant>& source,
                                    const vector<Implicant>& implicantsToRemove);
 
@@ -34,7 +36,7 @@ vector<int> getUniqueMinterms(vector<Implicant>& implicants);
 vector<Implicant> removeMinterms(vector<Implicant>& implicants,
                                  const vector<int>& mintermsToRemove);
 
-void printImplicant(vector<Implicant> v);
+Implicant findMaxMintermImplicant(const vector<Implicant>& implicants);
 
 vector<Implicant> petrick(const vector<Implicant>& primeImplicant);
 

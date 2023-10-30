@@ -184,15 +184,45 @@ vector<Implicant> removeMinterms(vector<Implicant>& implicants,
   return implicants;
 }
 
+Implicant findMaxMintermImplicant(const vector<Implicant>& implicants) {
+  Implicant maxMintermImplicant;
+  size_t maxMinterms = 0;
+
+  for (const auto& implicant : implicants) {
+    if (implicant.minterms.size() > maxMinterms) {
+      maxMinterms = implicant.minterms.size();
+      maxMintermImplicant = implicant;
+    }
+  }
+
+  return maxMintermImplicant;
+}
+
 vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
+  vector<pair<Implicant, vector<int>>> primeImplicantMinterms;
   vector<Implicant> copy_implicants = primeImplicant;
   vector<Implicant> solution;
+  int size = 0;
+  while (copy_implicants.size() > 0) {
+    primeImplicantMinterms
+        .clear();  // Clear the vector before populating it again
 
-  while (!copy_implicants.empty()) {
+    for (const auto& implicant : primeImplicant) {
+      primeImplicantMinterms.emplace_back(implicant, implicant.minterms);
+    }
+
     vector<Implicant> temp_epi =
         generateEssentialPrimeImplicants(copy_implicants);
     solution.insert(solution.end(), temp_epi.begin(), temp_epi.end());
-
+    if (size == solution.size()) {
+      temp_epi = vector<Implicant>{findMaxMintermImplicant(copy_implicants)};
+      solution.insert(solution.end(), temp_epi.begin(), temp_epi.end());
+      copy_implicants = removeImplicants(copy_implicants, temp_epi);
+      copy_implicants =
+          removeMinterms(copy_implicants, getUniqueMinterms(temp_epi));
+    } else {
+      size = solution.size();
+    }
     copy_implicants = removeImplicants(copy_implicants, temp_epi);
     copy_implicants =
         removeMinterms(copy_implicants, getUniqueMinterms(temp_epi));
@@ -203,5 +233,15 @@ vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
         findDominatingMinterms(associatePrimeImplicants(copy_implicants)));
   }
 
-  return removeDuplicateImplicants(solution);
+  solution = removeDuplicateImplicants(solution);
+
+  for (auto& implicant : solution) {
+    for (auto& original_implicant : primeImplicantMinterms) {
+      if (implicant.binary == original_implicant.first.binary) {
+        implicant.minterms = original_implicant.second;
+      }
+    }
+  }
+
+  return solution;
 }
