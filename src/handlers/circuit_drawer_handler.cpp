@@ -103,6 +103,13 @@ void circuit_drawer_handler(const crow::request &req, crow::response &res) {
 
   vector<Token> minimizedTokens = tokenize(minimizedImplicantsString);
 
+  if (minimizedTokens.empty()) {
+    res.code = 400;
+    res.write("No circuit to draw.");
+    res.end();
+    return;
+  }
+
   string verilogCode = SoPToVerilog(minimizedTokens);
   string result = verilogToJSON(verilogCode);
 

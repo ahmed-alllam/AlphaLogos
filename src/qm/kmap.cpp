@@ -184,16 +184,17 @@ string makeKMapLaTeX(vector<Implicant> primeImplicants,
 
   latex += "\\minterms{";
 
-  for (Minterm minterm : minterms) {
-    latex += to_string(minterm.index) + ",";
+  for (int i = 0; i < minterms.size(); i++) {
+    latex += to_string(minterms[i].index);
+
+    if (i != minterms.size() - 1) {
+      latex += ",";
+    }
   }
 
-  latex.pop_back();  // remove last comma
   latex += "}\n";
 
   latex += "\\autoterms[0]\n";
-
-  // ToDo: put first the EPIs, and avoid redundancy of the PIs
 
   for (Implicant implicant : primeImplicants) {
     latex += generateLatexForImplicant(implicant, variableTokens.size()) + "\n";

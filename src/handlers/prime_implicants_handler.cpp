@@ -56,6 +56,14 @@ void prime_implicants_handler(const crow::request &req, crow::response &res) {
     }
   }
 
+  if (primeImplicantsString == "") {
+    if (minTerms.size() == 0) {
+      primeImplicantsString = "0";
+    } else {
+      primeImplicantsString = "1";
+    }
+  }
+
   inja::Environment env;
   inja::Template PITemplate =
       env.parse_template("templates/prime_implicants.html");

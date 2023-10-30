@@ -18,13 +18,20 @@ using namespace std;
 
 int calculate_number_of_MOSFETS(vector<Implicant> minimizedImplicants) {
   int numMOSFET = 0;
+  int non_zero_PI = 0;
 
   for (auto &implicant : minimizedImplicants) {
     int num_inputs = 0;
 
+    bool is_zero_PI = true;
     for (auto &literal : implicant.binary) {
       if (literal != -1) {
         num_inputs++;
+
+        if (is_zero_PI) {
+          non_zero_PI++;
+          is_zero_PI = false;
+        }
       }
     }
 
@@ -33,7 +40,9 @@ int calculate_number_of_MOSFETS(vector<Implicant> minimizedImplicants) {
     }
   }
 
-  numMOSFET += minimizedImplicants.size() * 2 + 2;  // OR gate
+  if (minimizedImplicants.size() > 1 && non_zero_PI > 1) {
+    return numMOSFET + non_zero_PI * 2 + 2;  // OR gate
+  }
 
   return numMOSFET;
 }
@@ -82,13 +91,27 @@ void petrick_handler(const crow::request &req, crow::response &res) {
     }
   }
 
+  int numMOSFET = calculate_number_of_MOSFETS(minimizedImplicants);
+
+  if (minimizedImplicantsString == "") {
+    numMOSFET = 0;
+  }
+
+  if (minimizedImplicantsString == "") {
+    if (minTerms.size() == 0) {
+      minimizedImplicantsString = "0";
+    } else {
+      minimizedImplicantsString = "1";
+    }
+  }
+
   inja::Environment env;
   inja::Template petrickTemplate = env.parse_template("templates/petrick.html");
 
-  string result = env.render(
-      petrickTemplate,
-      {{"minimizedImplicantsString", minimizedImplicantsString},
-       {"numMOSFET", calculate_number_of_MOSFETS(minimizedImplicants)}});
+  string result =
+      env.render(petrickTemplate,
+                 {{"minimizedImplicantsString", minimizedImplicantsString},
+                  {"numMOSFET", numMOSFET}});
 
   res.set_header("Content-Type", "text/html");
   res.write(result);

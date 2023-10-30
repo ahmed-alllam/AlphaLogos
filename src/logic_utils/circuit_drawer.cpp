@@ -20,8 +20,6 @@ string join(vector<string> items, string delimiter) {
   return result.str();
 }
 
-// ToDo: take the minimized expression
-
 string SoPToWaveJSON(vector<Token> tokens) {
   ostringstream json_output;
 
@@ -80,10 +78,6 @@ string SoPToWaveJSON(vector<Token> tokens) {
   return json_output.str();
 }
 
-
-// ToDo: take the minimized expression
-
-
 string SoPToVerilog(vector<Token> tokens) {
   ostringstream verilog_output;
 
@@ -135,7 +129,7 @@ string SoPToVerilog(vector<Token> tokens) {
   if (!and_group.empty()) {
     if (and_group.size() > 1) {
       all_items.push_back("(" + join(and_group, " & ") + ")");
-    } else {
+    } else if (and_group.size() == 1) {
       all_items.push_back(and_group[0]);
     }
   }
@@ -143,7 +137,7 @@ string SoPToVerilog(vector<Token> tokens) {
   verilog_output << "  assign out = ";
   if (all_items.size() > 1) {
     verilog_output << join(all_items, " | ");
-  } else {
+  } else if (all_items.size() == 1) {
     verilog_output << all_items[0];
   }
   verilog_output << ";";

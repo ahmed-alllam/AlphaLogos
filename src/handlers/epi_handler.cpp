@@ -61,6 +61,19 @@ void epi_handler(const crow::request &req, crow::response &res) {
     }
   }
 
+  if (EPIsString == "") {
+    if (minTerms.size() == 0) {
+      EPIsString = "0";
+    } else {
+      if (primeImplicants.size() == 1 &&
+          implicantToString(primeImplicants[0], uniqueVariables) == "") {
+        EPIsString = "1";
+      } else {
+        EPIsString = "No Essential Prime Implicants";
+      }
+    }
+  }
+
   inja::Environment env;
   inja::Template PITemplate =
       env.parse_template("templates/essential_prime_implicants.html");
