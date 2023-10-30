@@ -226,7 +226,6 @@ vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
     copy_implicants = removeImplicants(copy_implicants, temp_epi);
     copy_implicants =
         removeMinterms(copy_implicants, getUniqueMinterms(temp_epi));
-    copy_implicants = removeDuplicateImplicants(copy_implicants);
     copy_implicants = removeDominatedRows(copy_implicants);
     copy_implicants = removeDominatingMinterms(
         copy_implicants,
