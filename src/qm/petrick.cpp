@@ -16,8 +16,7 @@ vector<Implicant> removeImplicants(
     const vector<Implicant>& implicantsToRemove) {
   vector<Implicant> result = source;
   for (const auto& toRemove : implicantsToRemove) {
-    result.erase(std::remove(result.begin(), result.end(), toRemove),
-                 result.end());
+    result.erase(remove(result.begin(), result.end(), toRemove), result.end());
   }
   return result;
 }
@@ -27,7 +26,7 @@ vector<Implicant> removeDuplicateImplicants(
   vector<Implicant> result;
 
   for (const Implicant& implicant : implicants) {
-    if (std::find(result.begin(), result.end(), implicant) == result.end()) {
+    if (find(result.begin(), result.end(), implicant) == result.end()) {
       result.push_back(implicant);
     }
   }
@@ -41,10 +40,10 @@ vector<Implicant> removeDominatedRows(const vector<Implicant>& implicants) {
   for (size_t i = 0; i < implicants.size(); ++i) {
     bool isDominated = false;
     for (size_t j = 0; j < implicants.size(); ++j) {
-      if (i != j && std::includes(implicants[j].minterms.begin(),
-                                  implicants[j].minterms.end(),
-                                  implicants[i].minterms.begin(),
-                                  implicants[i].minterms.end())) {
+      if (i != j &&
+          includes(implicants[j].minterms.begin(), implicants[j].minterms.end(),
+                   implicants[i].minterms.begin(),
+                   implicants[i].minterms.end())) {
         isDominated = true;
         break;
       }
@@ -57,12 +56,12 @@ vector<Implicant> removeDominatedRows(const vector<Implicant>& implicants) {
   return result;
 }
 
-std::vector<std::pair<int, std::vector<std::vector<int>>>>
-associatePrimeImplicants(const std::vector<Implicant>& implicants) {
-  std::vector<std::pair<int, std::vector<std::vector<int>>>> result;
+vector<pair<int, vector<vector<int>>>> associatePrimeImplicants(
+    const vector<Implicant>& implicants) {
+  vector<pair<int, vector<vector<int>>>> result;
 
   // Create a map to store the prime implicants associated with each minterm
-  std::unordered_map<int, std::vector<std::vector<int>>> mintermPrimeImplicants;
+  unordered_map<int, vector<vector<int>>> mintermPrimeImplicants;
 
   // Collect all minterms from implicants and associate prime implicants
   for (const Implicant& implicant : implicants) {
@@ -74,7 +73,7 @@ associatePrimeImplicants(const std::vector<Implicant>& implicants) {
   // Create the result vector with minterm index and associated prime implicants
   for (const auto& entry : mintermPrimeImplicants) {
     int minterm = entry.first;
-    const std::vector<std::vector<int>>& primeImplicants = entry.second;
+    const vector<vector<int>>& primeImplicants = entry.second;
 
     result.emplace_back(minterm, primeImplicants);
   }
@@ -82,31 +81,28 @@ associatePrimeImplicants(const std::vector<Implicant>& implicants) {
   return result;
 }
 
-std::vector<int> findDominatingMinterms(
-    const std::vector<std::pair<int, std::vector<std::vector<int>>>>&
-        mintermPrimeImplicants) {
-  std::unordered_set<int> dominatingMinterms;
+vector<int> findDominatingMinterms(
+    const vector<pair<int, vector<vector<int>>>>& mintermPrimeImplicants) {
+  unordered_set<int> dominatingMinterms;
 
   // Check for dominating minterms
   for (auto it1 = mintermPrimeImplicants.begin();
        it1 != mintermPrimeImplicants.end(); ++it1) {
     int minterm1 = it1->first;
-    const std::vector<std::vector<int>>& primeImplicants1 = it1->second;
+    const vector<vector<int>>& primeImplicants1 = it1->second;
 
-    for (auto it2 = std::next(it1); it2 != mintermPrimeImplicants.end();
-         ++it2) {
+    for (auto it2 = next(it1); it2 != mintermPrimeImplicants.end(); ++it2) {
       int minterm2 = it2->first;
-      const std::vector<std::vector<int>>& primeImplicants2 = it2->second;
+      const vector<vector<int>>& primeImplicants2 = it2->second;
 
       bool isDominating = true;
 
       // Check if minterm1 dominates minterm2
-      for (const std::vector<int>& implicant2 : primeImplicants2) {
+      for (const vector<int>& implicant2 : primeImplicants2) {
         bool isCovered = false;
 
-        for (const std::vector<int>& implicant1 : primeImplicants1) {
-          if (std::equal(implicant2.begin(), implicant2.end(),
-                         implicant1.begin())) {
+        for (const vector<int>& implicant1 : primeImplicants1) {
+          if (equal(implicant2.begin(), implicant2.end(), implicant1.begin())) {
             isCovered = true;
             break;
           }
@@ -125,7 +121,7 @@ std::vector<int> findDominatingMinterms(
     }
   }
 
-  return std::vector<int>(dominatingMinterms.begin(), dominatingMinterms.end());
+  return vector<int>(dominatingMinterms.begin(), dominatingMinterms.end());
 }
 
 vector<Implicant> removeDominatingMinterms(vector<Implicant>& implicants,
@@ -147,8 +143,8 @@ vector<Implicant> removeDominatingMinterms(vector<Implicant>& implicants,
   return filteredImplicants;
 }
 
-std::vector<int> getUniqueMinterms(std::vector<Implicant>& implicants) {
-  std::unordered_set<int> uniqueMintermsSet;
+vector<int> getUniqueMinterms(vector<Implicant>& implicants) {
+  unordered_set<int> uniqueMintermsSet;
 
   // Iterate over each implicant
   for (const auto& implicant : implicants) {
@@ -159,8 +155,8 @@ std::vector<int> getUniqueMinterms(std::vector<Implicant>& implicants) {
   }
 
   // Convert the set to a vector
-  std::vector<int> uniqueMinterms(uniqueMintermsSet.begin(),
-                                  uniqueMintermsSet.end());
+  vector<int> uniqueMinterms(uniqueMintermsSet.begin(),
+                             uniqueMintermsSet.end());
 
   return uniqueMinterms;
 }
@@ -186,16 +182,6 @@ vector<Implicant> removeMinterms(vector<Implicant>& implicants,
   }
 
   return implicants;
-}
-
-void printImplicant(vector<Implicant> v) {
-  cout << "The vector of implicant are: " << endl;
-  for (int i = 0; i < v.size(); i++) {
-    for (int j = 0; j < v[i].binary.size(); j++) {
-      cout << v[i].binary[j] << " ";
-    }
-    cout << endl;
-  }
 }
 
 vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
