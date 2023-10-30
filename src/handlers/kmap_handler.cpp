@@ -12,6 +12,7 @@
 #include "../logic_utils/truth_table_generator.h"
 #include "../qm/implicant.h"
 #include "../qm/kmap.h"
+#include "../qm/petrick.h"
 #include "../qm/prime_implicants.h"
 
 using namespace std;
@@ -49,9 +50,11 @@ string generate_kmap(vector<Implicant> primeImplicants,
   string kmapSVG((istreambuf_iterator<char>(kmapSVGFile)),
                  istreambuf_iterator<char>());
 
-  command = "rm kmap" + randomString + ".tex kmap" + randomString +
-            ".pdf kmap" + randomString + ".svg" + " > /dev/null 2>&1";
-  result = system(command.c_str());
+  // ToDo: uncomment this
+
+  // command = "rm kmap" + randomString + ".tex kmap" + randomString +
+  //           ".pdf kmap" + randomString + ".svg" + " > /dev/null 2>&1";
+  // result = system(command.c_str());
 
   return kmapSVG;
 }
@@ -88,11 +91,12 @@ void kmap_handler(const crow::request &req, crow::response &res) {
   vector<vector<bool>> truthTable = generateTruthTable(tokens);
   vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
+  vector<Implicant> minimizedImplicants = petrick(primeImplicants);
 
   string result = "";
 
   try {
-    result = generate_kmap(primeImplicants, uniqueVariables, minTerms);
+    result = generate_kmap(minimizedImplicants, uniqueVariables, minTerms);
   } catch (const char *e) {
     res.code = 400;
     res.write("Error generating Karnaugh map");
