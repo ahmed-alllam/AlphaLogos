@@ -102,16 +102,23 @@ document.getElementById("truthTable").onclick = function () {
 }
 
 
-function addPaddingToCanonicals() {
-    const canonicalSoP = document.getElementById("sop");
-    const canonicalPoS = document.getElementById("pos");
+function addPaddingToExpressions() {
+    const SoPHolders = document.getElementsByClassName("sop");
+    const PoSHolders = document.getElementsByClassName("pos");
 
-    if (!canonicalSoP || !canonicalPoS) {
+    if (SoPHolders.length === 0 && PoSHolders.length === 0) {
         return;
     }
 
-    canonicalSoP.innerHTML = canonicalSoP.innerHTML.replaceAll("+", "&nbsp; + &nbsp;");
-    canonicalPoS.innerHTML = canonicalPoS.innerHTML.replaceAll(")(", ") &nbsp; (");
+    for (let i = 0; i < SoPHolders.length; i++) {
+        const SoP = SoPHolders[i];
+        SoP.innerHTML = SoP.innerHTML.replaceAll("+", "&nbsp; + &nbsp;");
+    }
+
+    for (let i = 0; i < PoSHolders.length; i++) {
+        const PoS = PoSHolders[i];
+        PoS.innerHTML = PoS.innerHTML.replaceAll(")(", ") &nbsp; (");
+    }
 }
 
 document.getElementById("canonicalForms").onclick = function () {
@@ -146,7 +153,7 @@ document.getElementById("canonicalForms").onclick = function () {
                         canonicals_div.innerHTML = text;
                         canonicals_div.className = "canonical-forms";
                         document.getElementById("output").appendChild(canonicals_div);
-                        addPaddingToCanonicals();
+                        addPaddingToExpressions();
                     });
                 } else if (response.status === 400) {
                     response.text().then(text => {
@@ -201,6 +208,7 @@ document.getElementById("primeImplicants").onclick = function () {
                         primeImplicants_div.innerHTML = text;
                         primeImplicants_div.className = "prime-implicants";
                         document.getElementById("output").appendChild(primeImplicants_div);
+                        addPaddingToExpressions();
                     });
                 } else if (response.status === 400) {
                     response.text().then(text => {
@@ -255,6 +263,7 @@ document.getElementById("essentialPIs").onclick = function () {
                         epi_div.innerHTML = text;
                         epi_div.className = "essential-prime-implicants";
                         document.getElementById("output").appendChild(epi_div);
+                        addPaddingToExpressions();
                     });
                 } else if (response.status === 400) {
                     response.text().then(text => {
@@ -309,6 +318,7 @@ document.getElementById("uncoveredMinterms").onclick = function () {
                         uncovered_minterms_div.innerHTML = text;
                         uncovered_minterms_div.className = "uncovered-minterms";
                         document.getElementById("output").appendChild(uncovered_minterms_div);
+                        addPaddingToExpressions();
                     });
                 } else if (response.status === 400) {
                     response.text().then(text => {
@@ -363,6 +373,7 @@ document.getElementById("minimizedExpression").onclick = function () {
                         minimized_expression_div.innerHTML = text;
                         minimized_expression_div.className = "minimal-expression";
                         document.getElementById("output").appendChild(minimized_expression_div);
+                        addPaddingToExpressions();
                     });
                 } else if (response.status === 400) {
                     response.text().then(text => {
