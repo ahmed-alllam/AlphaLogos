@@ -211,9 +211,17 @@ vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
       primeImplicantMinterms.emplace_back(implicant, implicant.minterms);
     }
 
+    copy_implicants = removeDominatedRows(copy_implicants);
+    copy_implicants = removeDominatingMinterms(
+        copy_implicants,
+        findDominatingMinterms(associatePrimeImplicants(copy_implicants)));
     vector<Implicant> temp_epi =
         generateEssentialPrimeImplicants(copy_implicants);
     solution.insert(solution.end(), temp_epi.begin(), temp_epi.end());
+
+    copy_implicants = removeImplicants(copy_implicants, temp_epi);
+    copy_implicants =
+        removeMinterms(copy_implicants, getUniqueMinterms(temp_epi));
     if (size == solution.size()) {
       temp_epi = vector<Implicant>{findMaxMintermImplicant(copy_implicants)};
       solution.insert(solution.end(), temp_epi.begin(), temp_epi.end());
@@ -223,13 +231,6 @@ vector<Implicant> petrick(const vector<Implicant>& primeImplicant) {
     } else {
       size = solution.size();
     }
-    copy_implicants = removeImplicants(copy_implicants, temp_epi);
-    copy_implicants =
-        removeMinterms(copy_implicants, getUniqueMinterms(temp_epi));
-    copy_implicants = removeDominatedRows(copy_implicants);
-    copy_implicants = removeDominatingMinterms(
-        copy_implicants,
-        findDominatingMinterms(associatePrimeImplicants(copy_implicants)));
   }
 
   solution = removeDuplicateImplicants(solution);
