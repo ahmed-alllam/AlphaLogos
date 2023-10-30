@@ -11,10 +11,18 @@ vector<Minterm> getUncoveredMinterms(
     vector<Minterm>& minterms, const vector<Implicant>& essentialImplicants) {
   vector<Minterm> uncoveredMinterms;
 
+  for (Minterm& minterm : minterms) {
+    minterm.is_covered = false;
+  }
+
   for (const Implicant& implicant : essentialImplicants) {
     for (int mintermIndex : implicant.minterms) {
-      Minterm& minterm = minterms[mintermIndex];
-      minterm.is_covered = true;
+      for (Minterm& minterm : minterms) {
+        if (minterm.index == mintermIndex) {
+          minterm.is_covered = true;
+          break;
+        }
+      }
     }
   }
 

@@ -39,8 +39,8 @@ void canonicals_handler(const crow::request &req, crow::response &res) {
   vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
   vector<Maxterm> maxTerms = generateMaxTerms(uniqueVariables, truthTable);
 
-  string canonicalSoP = mintermsToString(minTerms, uniqueVariables);
-  string canonicalPoS = maxtermsToString(maxTerms, uniqueVariables);
+  string canonicalSoP = canonicalSoPToString(minTerms, uniqueVariables);
+  string canonicalPoS = canonicalPoSToString(maxTerms, uniqueVariables);
 
   inja::Environment env;
   inja::Template canonicalsTemplate =

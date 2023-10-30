@@ -114,6 +114,10 @@ button>span {
     font-size: 0.9rem;
 }
 
+span {
+    font-family: 'Poppins', sans-serif;
+}
+
 #detailed-output {
     display: none;
 

@@ -1,0 +1,48 @@
+<div class="implicant-container">
+    <div class="implicant-item">
+        <span class="implicant-label">EPIs: </span>
+        <span class="implicant-value">&nbsp; {{ EPIs }}</span>
+    </div>
+</div>
+
+<style>
+    .implicant-container {
+        padding: 25px;
+        border-radius: 10px;
+        width: 90%;
+        margin: auto;
+        background-color: #f9f9f9;
+        border: 1px solid #e1e1e1;
+
+        overflow: scroll;
+    }
+
+    .implicant-item {
+        display: flex;
+        /* justify-content: space-between; */
+        align-items: center;
+        margin-top: 15px;
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+    }
+
+    .implicant-label {
+        color: #333;
+        font-weight: 500;
+        font-size: 16px;
+
+        margin: 0 10px;
+    }
+
+    .implicant-value {
+        color: #3498db;
+        font-weight: 600;
+        font-size: 16px;
+
+        text-wrap: nowrap;
+        white-space: nowrap;
+        letter-spacing: 2px;
+
+        padding-right: 15px;
+    }
+</style>
