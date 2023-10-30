@@ -10,10 +10,12 @@
 #include "../logic_utils/minterm.h"
 #include "../logic_utils/token.h"
 #include "../logic_utils/truth_table_generator.h"
+#include "../qm/essential_prime_implicants.h"
 #include "../qm/implicant.h"
 #include "../qm/kmap.h"
 #include "../qm/petrick.h"
 #include "../qm/prime_implicants.h"
+#include "../qm/uncovered_minterms.h"
 
 using namespace std;
 
@@ -97,7 +99,15 @@ void kmap_handler(const crow::request &req, crow::response &res) {
   }
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
-  vector<Implicant> minimizedImplicants = petrick(primeImplicants);
+
+  vector<Implicant> essentialPrimeImplicants =
+      generateEssentialPrimeImplicants(primeImplicants);
+
+  vector<Minterm> uncoveredMinterms =
+      getUncoveredMinterms(minTerms, essentialPrimeImplicants);
+
+  vector<Implicant> minimizedImplicants = doPetrickMinimization(
+      primeImplicants, essentialPrimeImplicants, uncoveredMinterms);
 
   string result = "";
 
