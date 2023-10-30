@@ -1,38 +1,43 @@
 #ifndef PETRICK_H
 #define PETRICK_H
 
-// QuineMcCluskeySolver.h
-
+#include <algorithm>
+#include <iostream>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 #include "../logic_utils/minterm.h"
+#include "essential_prime_implicants.h"
 #include "implicant.h"
 
-class QuineMcCluskeySolver {
- public:
-  static std::vector<Implicant> removeImplicants(
-      const std::vector<Implicant>& source,
-      const std::vector<Implicant>& implicantsToRemove);
+using namespace std;
 
-  static bool compareImplicants(const Implicant& a, const Implicant& b);
+vector<Implicant> removeImplicants(const vector<Implicant>& source,
+                                   const vector<Implicant>& implicantsToRemove);
 
-  static std::vector<Implicant> generateEssentialPrimeImplicants(
-      const std::vector<Implicant>& primeImplicants);
+vector<Implicant> removeDuplicateImplicants(
+    const vector<Implicant>& implicants);
 
-  static std::vector<Implicant> removeDuplicateImplicants(
-      const std::vector<Implicant>& implicants);
+vector<Implicant> removeDominatedRows(const vector<Implicant>& implicants);
 
-  static std::vector<Implicant> removeDominatedRows(
-      const std::vector<Implicant>& implicants);
+vector<pair<int, vector<vector<int>>>> associatePrimeImplicants(
+    const vector<Implicant>& implicants);
 
-  static std::vector<Implicant> petrick(
-      const std::vector<Implicant>& primeImplicant);
+vector<int> findDominatingMinterms(
+    const vector<pair<int, vector<vector<int>>>>& mintermPrimeImplicants);
 
-  // Assuming other functions like removeMinterms, getUniqueMinterms, etc. are
-  // also public, add their declarations here.
-};
+vector<Implicant> removeDominatingMinterms(vector<Implicant>& implicants,
+                                           const vector<int>& minterms);
 
-#endif  // QUINE_MCCLUSKEY_SOLVER_H
+vector<int> getUniqueMinterms(vector<Implicant>& implicants);
+
+vector<Implicant> removeMinterms(vector<Implicant>& implicants,
+                                 const vector<int>& mintermsToRemove);
+
+void printImplicant(vector<Implicant> v);
+
+vector<Implicant> petrick(const vector<Implicant>& primeImplicant);
+
+#endif  // PETRICK_H
