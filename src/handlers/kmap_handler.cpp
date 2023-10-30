@@ -50,11 +50,9 @@ string generate_kmap(vector<Implicant> primeImplicants,
   string kmapSVG((istreambuf_iterator<char>(kmapSVGFile)),
                  istreambuf_iterator<char>());
 
-  // ToDo: uncomment this
-
-  // command = "rm kmap" + randomString + ".tex kmap" + randomString +
-  //           ".pdf kmap" + randomString + ".svg" + " > /dev/null 2>&1";
-  // result = system(command.c_str());
+  command = "rm kmap" + randomString + ".tex kmap" + randomString +
+            ".pdf kmap" + randomString + ".svg" + " > /dev/null 2>&1";
+  result = system(command.c_str());
 
   return kmapSVG;
 }

@@ -42,6 +42,14 @@ void canonicals_handler(const crow::request &req, crow::response &res) {
   string canonicalSoP = canonicalSoPToString(minTerms, uniqueVariables);
   string canonicalPoS = canonicalPoSToString(maxTerms, uniqueVariables);
 
+  if (canonicalSoP == "") {
+    canonicalSoP = "0";
+  }
+
+  if (canonicalPoS == "") {
+    canonicalPoS = "1";
+  }
+
   inja::Environment env;
   inja::Template canonicalsTemplate =
       env.parse_template("templates/canonicals.html");

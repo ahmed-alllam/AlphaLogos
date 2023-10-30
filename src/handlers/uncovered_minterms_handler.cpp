@@ -59,6 +59,10 @@ void uncovered_minterms_handler(const crow::request &req, crow::response &res) {
   string uncoveredMintermsString =
       canonicalSoPToString(uncoveredMinterms, uniqueVariables);
 
+  if (uncoveredMintermsString == "") {
+    uncoveredMintermsString = "No Uncovered Minterms";
+  }
+
   inja::Environment env;
   inja::Template uncoveredMintermsTemplate =
       env.parse_template("templates/uncovered_minterms.html");
