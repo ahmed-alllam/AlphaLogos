@@ -16,6 +16,28 @@
 
 using namespace std;
 
+int calculate_number_of_MOSFETS(vector<Implicant> minimizedImplicants) {
+  int numMOSFET = 0;
+
+  for (auto &implicant : minimizedImplicants) {
+    int num_inputs = 0;
+
+    for (auto &literal : implicant.binary) {
+      if (literal != -1) {
+        num_inputs++;
+      }
+    }
+
+    if (num_inputs > 1) {
+      numMOSFET += num_inputs * 2 + 2;  // AND gate
+    }
+  }
+
+  numMOSFET += minimizedImplicants.size() * 2 + 2;  // OR gate
+
+  return numMOSFET;
+}
+
 void petrick_handler(const crow::request &req, crow::response &res) {
   auto x = crow::json::load(req.body);
 
@@ -40,7 +62,12 @@ void petrick_handler(const crow::request &req, crow::response &res) {
   vector<vector<bool>> truthTable = generateTruthTable(tokens);
   vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
 
-  // ToDo: Added if to check if minterms do not exceed a big number
+  if (minTerms.size() > 32) {
+    res.code = 400;
+    res.write("Too Many Minterms");
+    res.end();
+    return;
+  }
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
 
@@ -58,9 +85,10 @@ void petrick_handler(const crow::request &req, crow::response &res) {
   inja::Environment env;
   inja::Template petrickTemplate = env.parse_template("templates/petrick.html");
 
-  string result =
-      env.render(petrickTemplate,
-                 {{"minimizedImplicantsString", minimizedImplicantsString}});
+  string result = env.render(
+      petrickTemplate,
+      {{"minimizedImplicantsString", minimizedImplicantsString},
+       {"numMOSFET", calculate_number_of_MOSFETS(minimizedImplicants)}});
 
   res.set_header("Content-Type", "text/html");
   res.write(result);

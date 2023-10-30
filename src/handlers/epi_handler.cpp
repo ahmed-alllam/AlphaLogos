@@ -40,7 +40,12 @@ void epi_handler(const crow::request &req, crow::response &res) {
   vector<vector<bool>> truthTable = generateTruthTable(tokens);
   vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
 
-  // ToDo: Added if to check if minterms do not exceed a big number
+  if (minTerms.size() > 32) {
+    res.code = 400;
+    res.write("Too Many Minterms");
+    res.end();
+    return;
+  }
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
 
