@@ -1,3 +1,5 @@
+#include "petrick_handler.h"
+
 #include <fstream>
 #include <inja.hpp>
 #include <iostream>
@@ -9,12 +11,34 @@
 #include "../logic_utils/token.h"
 #include "../logic_utils/truth_table_generator.h"
 #include "../qm/implicant.h"
+#include "../qm/petrick.h"
 #include "../qm/prime_implicants.h"
-#include "canonicals_handler.h"
 
 using namespace std;
 
-void prime_implicants_handler(const crow::request &req, crow::response &res) {
+int calculate_number_of_MOSFETS(vector<Implicant> minimizedImplicants) {
+  int numMOSFET = 0;
+
+  for (auto &implicant : minimizedImplicants) {
+    int num_inputs = 0;
+
+    for (auto &literal : implicant.binary) {
+      if (literal != -1) {
+        num_inputs++;
+      }
+    }
+
+    if (num_inputs > 1) {
+      numMOSFET += num_inputs * 2 + 2;  // AND gate
+    }
+  }
+
+  numMOSFET += minimizedImplicants.size() * 2 + 2;  // OR gate
+
+  return numMOSFET;
+}
+
+void petrick_handler(const crow::request &req, crow::response &res) {
   auto x = crow::json::load(req.body);
 
   if (!x) {
@@ -47,21 +71,24 @@ void prime_implicants_handler(const crow::request &req, crow::response &res) {
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
 
-  string primeImplicantsString;
-  for (auto &implicant : primeImplicants) {
-    primeImplicantsString += implicantToString(implicant, uniqueVariables);
+  vector<Implicant> minimizedImplicants = petrick(primeImplicants);
 
-    if (&implicant != &primeImplicants.back()) {
-      primeImplicantsString += " + ";
+  string minimizedImplicantsString = "";
+  for (auto &implicant : minimizedImplicants) {
+    minimizedImplicantsString += implicantToString(implicant, uniqueVariables);
+
+    if (&implicant != &minimizedImplicants.back()) {
+      minimizedImplicantsString += " + ";
     }
   }
 
   inja::Environment env;
-  inja::Template PITemplate =
-      env.parse_template("templates/prime_implicants.html");
+  inja::Template petrickTemplate = env.parse_template("templates/petrick.html");
 
-  string result =
-      env.render(PITemplate, {{"primeImplicants", primeImplicantsString}});
+  string result = env.render(
+      petrickTemplate,
+      {{"minimizedImplicantsString", minimizedImplicantsString},
+       {"numMOSFET", calculate_number_of_MOSFETS(minimizedImplicants)}});
 
   res.set_header("Content-Type", "text/html");
   res.write(result);

@@ -223,6 +223,168 @@ document.getElementById("primeImplicants").onclick = function () {
     return false;
 }
 
+document.getElementById("essentialPIs").onclick = function () {
+    if (expression_valid) {
+
+        document.getElementById("output-title").innerHTML = "Essential Prime Implicants";
+
+        document.getElementById("validationMessage").innerHTML = "";
+        document.getElementById("detailed-error-message").innerHTML = "";
+
+        document.getElementById("output-options").style.display = "none";
+        document.getElementById("inputSection").style.display = "none";
+        document.getElementById("detailed-output").style.display = "flex";
+
+        document.getElementById("loader").style.display = "block";
+
+        fetch('/EPI', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expression: expression
+                })
+            })
+            .then(response => {
+                document.getElementById("loader").style.display = "none";
+
+                if (response.status === 200) {
+                    response.text().then(text => {
+                        var epi_div = document.createElement("div");
+                        epi_div.innerHTML = text;
+                        epi_div.className = "essential-prime-implicants";
+                        document.getElementById("output").appendChild(epi_div);
+                    });
+                } else if (response.status === 400) {
+                    response.text().then(text => {
+                        document.getElementById("detailed-error-message").innerHTML = text;
+                    });
+                } else {
+                    document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+            });
+    } else {
+        document.getElementById("validationMessage").innerHTML = "Enter Valid Expression and Analyze";
+        document.getElementById("validationMessage").style.color = "red";
+    }
+
+    return false;
+}
+
+document.getElementById("uncoveredMinterms").onclick = function () {
+    if (expression_valid) {
+
+        document.getElementById("output-title").innerHTML = "Uncovered Minterms";
+
+        document.getElementById("validationMessage").innerHTML = "";
+        document.getElementById("detailed-error-message").innerHTML = "";
+
+        document.getElementById("output-options").style.display = "none";
+        document.getElementById("inputSection").style.display = "none";
+        document.getElementById("detailed-output").style.display = "flex";
+
+        document.getElementById("loader").style.display = "block";
+
+        fetch('/uncovered-minterms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expression: expression
+                })
+            })
+            .then(response => {
+                document.getElementById("loader").style.display = "none";
+
+                if (response.status === 200) {
+                    response.text().then(text => {
+                        var uncovered_minterms_div = document.createElement("div");
+                        uncovered_minterms_div.innerHTML = text;
+                        uncovered_minterms_div.className = "uncovered-minterms";
+                        document.getElementById("output").appendChild(uncovered_minterms_div);
+                    });
+                } else if (response.status === 400) {
+                    response.text().then(text => {
+                        document.getElementById("detailed-error-message").innerHTML = text;
+                    });
+                } else {
+                    document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+            });
+    } else {
+        document.getElementById("validationMessage").innerHTML = "Enter Valid Expression and Analyze";
+        document.getElementById("validationMessage").style.color = "red";
+    }
+
+    return false;
+}
+
+document.getElementById("minimizedExpression").onclick = function () {
+    if (expression_valid) {
+
+        document.getElementById("output-title").innerHTML = "Minimized Expression";
+
+        document.getElementById("validationMessage").innerHTML = "";
+        document.getElementById("detailed-error-message").innerHTML = "";
+
+        document.getElementById("output-options").style.display = "none";
+        document.getElementById("inputSection").style.display = "none";
+        document.getElementById("detailed-output").style.display = "flex";
+
+        document.getElementById("loader").style.display = "block";
+
+        fetch('/minimized-expression', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expression: expression
+                })
+            })
+            .then(response => {
+                document.getElementById("loader").style.display = "none";
+
+                if (response.status === 200) {
+                    response.text().then(text => {
+                        var minimized_expression_div = document.createElement("div");
+                        minimized_expression_div.innerHTML = text;
+                        minimized_expression_div.className = "minimal-expression";
+                        document.getElementById("output").appendChild(minimized_expression_div);
+                    });
+                } else if (response.status === 400) {
+                    response.text().then(text => {
+                        document.getElementById("detailed-error-message").innerHTML = text;
+                    });
+                } else {
+                    document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("detailed-error-message").innerHTML = "An error occurred.";
+            });
+    } else {
+        document.getElementById("validationMessage").innerHTML = "Enter Valid Expression and Analyze";
+        document.getElementById("validationMessage").style.color = "red";
+    }
+
+    return false;
+}
+
 function removeLabels(obj) {
     for (let key in obj) {
         if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -384,6 +546,24 @@ document.getElementById("back").onclick = function () {
     var primeImplicants_div = document.getElementsByClassName("prime-implicants")[0];
     if (primeImplicants_div) {
         primeImplicants_div.remove();
+    }
+
+    // Remove essential prime implicants
+    var epi_div = document.getElementsByClassName("essential-prime-implicants")[0];
+    if (epi_div) {
+        epi_div.remove();
+    }
+
+    // Remove uncovered minterms
+    var uncovered_minterms_div = document.getElementsByClassName("uncovered-minterms")[0];
+    if (uncovered_minterms_div) {
+        uncovered_minterms_div.remove();
+    }
+
+    // Remove minimized expression
+    var minimized_expression_div = document.getElementsByClassName("minimal-expression")[0];
+    if (minimized_expression_div) {
+        minimized_expression_div.remove();
     }
 
     // Remove logic circuit

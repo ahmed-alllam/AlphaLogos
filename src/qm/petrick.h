@@ -36,7 +36,13 @@ vector<int> getUniqueMinterms(vector<Implicant>& implicants);
 vector<Implicant> removeMinterms(vector<Implicant>& implicants,
                                  const vector<int>& mintermsToRemove);
 
+
 Implicant findMaxMintermImplicant(const vector<Implicant>& implicants);
+
+void printImplicant(vector<Implicant> v);
+
+vector<Implicant> removeEmptyImplicants(const vector<Implicant>& implicants);
+
 
 vector<Implicant> petrick(const vector<Implicant>& primeImplicant);
 
