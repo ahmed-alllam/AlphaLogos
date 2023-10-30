@@ -5,6 +5,7 @@
 #include "handlers/epi_handler.h"
 #include "handlers/kmap_handler.h"
 #include "handlers/main_handler.h"
+#include "handlers/petrick_handler.h"
 #include "handlers/prime_implicants_handler.h"
 #include "handlers/truth_table_handler.h"
 #include "handlers/uncovered_minterms_handler.h"
@@ -50,6 +51,12 @@ void setup_routers(crow::SimpleApp &app) {
       .methods(crow::HTTPMethod::Post)(
           [](const crow::request &req, crow::response &res) {
             uncovered_minterms_handler(req, res);
+          });
+
+  CROW_ROUTE(app, "/minimized-expression")
+      .methods(crow::HTTPMethod::Post)(
+          [](const crow::request &req, crow::response &res) {
+            petrick_handler(req, res);
           });
 
   CROW_ROUTE(app, "/draw-circuit")
