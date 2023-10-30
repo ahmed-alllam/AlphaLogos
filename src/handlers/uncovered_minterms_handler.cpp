@@ -1,3 +1,5 @@
+#include "uncovered_minterms_handler.h"
+
 #include <fstream>
 #include <inja.hpp>
 #include <iostream>
@@ -8,13 +10,14 @@
 #include "../logic_utils/minterm.h"
 #include "../logic_utils/token.h"
 #include "../logic_utils/truth_table_generator.h"
+#include "../qm/essential_prime_implicants.h"
 #include "../qm/implicant.h"
 #include "../qm/prime_implicants.h"
-#include "canonicals_handler.h"
+#include "../qm/uncovered_minterms.h"
 
 using namespace std;
 
-void prime_implicants_handler(const crow::request &req, crow::response &res) {
+void uncovered_minterms_handler(const crow::request &req, crow::response &res) {
   auto x = crow::json::load(req.body);
 
   if (!x) {
@@ -42,21 +45,21 @@ void prime_implicants_handler(const crow::request &req, crow::response &res) {
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
 
-  string primeImplicantsString;
-  for (auto &implicant : primeImplicants) {
-    primeImplicantsString += implicantToString(implicant, uniqueVariables);
+  vector<Implicant> essentialPrimeImplicants =
+      generateEssentialPrimeImplicants(primeImplicants);
 
-    if (&implicant != &primeImplicants.back()) {
-      primeImplicantsString += " + ";
-    }
-  }
+  vector<Minterm> uncoveredMinterms =
+      getUncoveredMinterms(minTerms, essentialPrimeImplicants);
+
+  string uncoveredMintermsString =
+      canonicalSoPToString(uncoveredMinterms, uniqueVariables);
 
   inja::Environment env;
-  inja::Template PITemplate =
-      env.parse_template("templates/prime_implicants.html");
+  inja::Template uncoveredMintermsTemplate =
+      env.parse_template("templates/uncovered_minterms.html");
 
-  string result =
-      env.render(PITemplate, {{"primeImplicants", primeImplicantsString}});
+  string result = env.render(uncoveredMintermsTemplate,
+                             {{"uncoveredMinterms", uncoveredMintermsString}});
 
   res.set_header("Content-Type", "text/html");
   res.write(result);
