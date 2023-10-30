@@ -5,9 +5,10 @@
 
 using namespace std;
 
-bool isValidSoP(const std::string& expr) {
+bool isValidSoP(const std::string &expr) {
   int unmatchedParenCount = 0;
   bool lastWasAlpha = false;
+  bool lastWasClosedParen = false;
   bool lastWasOperator = false;
   bool lastCharWasApostrophe = false;
   bool endedWithOperator = false;
@@ -24,6 +25,7 @@ bool isValidSoP(const std::string& expr) {
       hadSummationInsideParen = false;
       unmatchedParenCount++;
       endedWithOperator = false;
+      lastWasClosedParen = false;
       continue;
     }
 
@@ -33,10 +35,12 @@ bool isValidSoP(const std::string& expr) {
         size_t nextCharIndex = i + 1;
         while (nextCharIndex < expr.size() && expr[nextCharIndex] == ' ')
           nextCharIndex++;  // Skip spaces
-        if (nextCharIndex == expr.size() || expr[nextCharIndex] != '+')
+        if (nextCharIndex == expr.size() ||
+            (expr[nextCharIndex] != '+' && expr[nextCharIndex] != '\''))
           return false;
       }
       isParenthesisOpen = false;
+      lastWasClosedParen = true;
       unmatchedParenCount--;
       continue;
     }
@@ -48,6 +52,7 @@ bool isValidSoP(const std::string& expr) {
       lastWasAlpha = false;
       lastCharWasApostrophe = false;
       endedWithOperator = true;
+      lastWasClosedParen = false;
       continue;
     }
 
@@ -58,6 +63,7 @@ bool isValidSoP(const std::string& expr) {
       lastWasAlpha = false;
       lastCharWasApostrophe = false;
       endedWithOperator = true;
+      lastWasClosedParen = false;
       continue;
     }
 
@@ -66,15 +72,18 @@ bool isValidSoP(const std::string& expr) {
       lastWasOperator = false;
       lastCharWasApostrophe = false;
       endedWithOperator = false;
+      lastWasClosedParen = false;
       continue;
     }
 
     if (c == '\'') {
-      if (!lastWasAlpha) return false;
+      if (!lastWasAlpha && !lastCharWasApostrophe && !lastWasClosedParen)
+        return false;
       lastWasAlpha = false;
       lastCharWasApostrophe = true;
       lastWasOperator = false;
       endedWithOperator = false;
+      lastWasClosedParen = false;
       continue;
     }
 

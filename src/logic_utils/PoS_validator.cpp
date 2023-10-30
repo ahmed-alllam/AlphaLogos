@@ -8,6 +8,7 @@ using namespace std;
 bool isValidPoS(const string& expr) {
   bool isParenthesisOpen = false;
   int charCountInParen = 0;
+  bool lastWasClosedParen = false;
   bool lastCharWasApostrophe = false;
   int unmatchedParenCount = 0;  // To track unmatched parentheses
 
@@ -23,6 +24,7 @@ bool isValidPoS(const string& expr) {
         isParenthesisOpen = false;
         charCountInParen = 0;
         lastCharWasApostrophe = false;
+        lastWasClosedParen = true;
         unmatchedParenCount--;
       } else if (c == '+') {
         if (charCountInParen != 1)
@@ -30,15 +32,17 @@ bool isValidPoS(const string& expr) {
                          // apostrophe)
         charCountInParen = 0;
         lastCharWasApostrophe = false;
+        lastWasClosedParen = false;
       } else if (isalpha(c)) {
         charCountInParen++;
         if (charCountInParen > 1) return false;  // No two characters in a row
         lastCharWasApostrophe = false;           // Resetting the flag
+        lastWasClosedParen = false;
       } else if (c == '\'') {
-        if (charCountInParen != 1 || lastCharWasApostrophe)
+        if (charCountInParen != 1 && !lastWasClosedParen)
           return false;  // Apostrophe should only come after a single character
-                         // and not another apostrophe
         lastCharWasApostrophe = true;
+        lastWasClosedParen = false;
       } else if (c == ' ') {
         // Spaces are allowed, but not immediately after an apostrophe
         if (lastCharWasApostrophe) return false;
@@ -49,11 +53,19 @@ bool isValidPoS(const string& expr) {
       if (c == '(') {
         isParenthesisOpen = true;
         unmatchedParenCount++;
+        lastWasClosedParen = false;
       } else if (c == ')') {
         return false;  // Closing parenthesis without an opening one
+      } else if (c == '\'' &&
+                 (lastWasClosedParen || lastCharWasApostrophe || isalpha(c))) {
+        lastCharWasApostrophe = true;
+        lastWasClosedParen = false;
+        continue;  // Apostrophe outside parenthesis is allowed
       } else if (c != ' ' && c != '*' && !isalpha(c)) {
         return false;  // Invalid character outside parenthesis
       }
+
+      lastWasClosedParen = false;
     }
   }
 
