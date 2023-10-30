@@ -15,6 +15,8 @@
 #include "../qm/kmap.h"
 #include "../qm/petrick.h"
 #include "../qm/prime_implicants.h"
+#include "../src/qm/essential_prime_implicants.h"
+#include "../src/qm/uncovered_minterms.h"
 
 using namespace std;
 
@@ -90,7 +92,13 @@ void circuit_drawer_handler(const crow::request &req, crow::response &res) {
   }
 
   vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
-  vector<Implicant> minimizedImplicants = petrick(primeImplicants);
+
+  vector<Implicant> EPIs = generateEssentialPrimeImplicants(primeImplicants);
+
+  vector<Minterm> uncoveredMinterms = getUncoveredMinterms(minTerms, EPIs);
+
+  vector<Implicant> minimizedImplicants =
+      doPetrickMinimization(primeImplicants, EPIs, uncoveredMinterms);
 
   string minimizedImplicantsString = "";
   for (auto &implicant : minimizedImplicants) {
