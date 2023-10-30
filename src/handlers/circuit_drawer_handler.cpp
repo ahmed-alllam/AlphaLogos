@@ -11,6 +11,10 @@
 #include "../logic_utils/minterm.h"
 #include "../logic_utils/token.h"
 #include "../logic_utils/truth_table_generator.h"
+#include "../qm/implicant.h"
+#include "../qm/kmap.h"
+#include "../qm/petrick.h"
+#include "../qm/prime_implicants.h"
 
 using namespace std;
 
@@ -74,14 +78,24 @@ void circuit_drawer_handler(const crow::request &req, crow::response &res) {
   }
 
   vector<Token> tokens = tokenize(logic_expression);
-  //   vector<Token> uniqueVariables = getUniqueVariables(tokens);
-  //   vector<vector<bool>> truthTable = generateTruthTable(tokens);
-  //   vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
+  vector<Token> uniqueVariables = getUniqueVariables(tokens);
+  vector<vector<bool>> truthTable = generateTruthTable(tokens);
+  vector<Minterm> minTerms = generateMinTerms(uniqueVariables, truthTable);
+  vector<Implicant> primeImplicants = generatePrimeImplicants(minTerms);
+  vector<Implicant> minimizedImplicants = petrick(primeImplicants);
 
-  // We should get the minimized expression from the qm. But since it is yet to
-  // be implemented, we will just use the original expression.
+  string minimizedImplicantsString = "";
+  for (auto &implicant : minimizedImplicants) {
+    minimizedImplicantsString += implicantToString(implicant, uniqueVariables);
 
-  string verilogCode = SoPToVerilog(tokens);
+    if (&implicant != &minimizedImplicants.back()) {
+      minimizedImplicantsString += " + ";
+    }
+  }
+
+  vector<Token> minimizedTokens = tokenize(minimizedImplicantsString);
+
+  string verilogCode = SoPToVerilog(minimizedTokens);
   string result = verilogToJSON(verilogCode);
 
   if (result == "") {

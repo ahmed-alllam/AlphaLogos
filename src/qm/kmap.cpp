@@ -27,7 +27,7 @@ bool customSort(int a, int b, int num_vars) {
   return it_a < it_b;
 }
 
-int mintermDistance(int a, int b, int num_vars) {
+int getIndex(int value, int num_vars) {
   std::vector<int> order = {0,  1,  3,  2,  4, 5, 7,  6,
                             12, 13, 15, 14, 8, 9, 11, 10};
 
@@ -35,30 +35,30 @@ int mintermDistance(int a, int b, int num_vars) {
     order = {0, 1, 2, 3};
   }
 
-  auto getIndex = [&order](int value) -> int {
-    return std::distance(order.begin(),
-                         std::find(order.begin(), order.end(), value));
-  };
+  return std::distance(order.begin(),
+                       std::find(order.begin(), order.end(), value));
+}
 
+int mintermDistance(int a, int b, int num_vars) {
   int columns = num_vars == 2 ? 2 : 4;
 
   // Same row case
   if (a / columns == b / columns) {
-    int pos_a = getIndex(a);
-    int pos_b = getIndex(b);
+    int pos_a = getIndex(a, num_vars);
+    int pos_b = getIndex(b, num_vars);
     return std::abs(pos_a - pos_b);
   }
 
   // Same column case
-  if (getIndex(a) % columns == getIndex(b) % columns) {
-    int pos_a = getIndex(a);
-    int pos_b = getIndex(b);
+  if (getIndex(a, num_vars) % columns == getIndex(b, num_vars) % columns) {
+    int pos_a = getIndex(a, num_vars);
+    int pos_b = getIndex(b, num_vars);
     return std::abs(pos_a / columns - pos_b / columns);
   }
 
   // Diagonal case
-  int pos_a = getIndex(a);
-  int pos_b = getIndex(b);
+  int pos_a = getIndex(a, num_vars);
+  int pos_b = getIndex(b, num_vars);
   int row_dist = std::abs(pos_a / columns - pos_b / columns) + 1;
   int col_dist = std::abs(pos_a % columns - pos_b % columns) + 1;
 
@@ -101,16 +101,11 @@ string generateLatexForImplicant(Implicant implicant, int num_vars) {
       order = {0, 1, 2, 3};
     }
 
-    auto getIndex = [&order](int value) -> int {
-      return std::distance(order.begin(),
-                           find(order.begin(), order.end(), value));
-    };
-
     int num_cols = num_vars == 2 ? 2 : 4;
 
     for (int minterm : minterms) {
-      int row = getIndex(minterm) / num_cols;
-      int col = getIndex(minterm) % num_cols;
+      int row = getIndex(minterm, num_vars) / num_cols;
+      int col = getIndex(minterm, num_vars) % num_cols;
 
       if (row < minRow) {
         minRow = row;
@@ -126,7 +121,9 @@ string generateLatexForImplicant(Implicant implicant, int num_vars) {
       }
     }
 
-    if (abs(minterms[0] - minterms[1]) != 1) {
+    if (abs(minterms[0] - minterms[1]) != 1 &&
+        abs(getIndex(minterms[0], num_vars) -
+            getIndex(minterms[1], num_vars)) != 1) {
       s += "{" + to_string(order[minRow * num_cols + minCol]) + "}{" +
            to_string(order[maxRow * num_cols + minCol]) + "}{" +
            to_string(order[minRow * num_cols + maxCol]) + "}{" +
