@@ -38,6 +38,8 @@
 
 AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and optimizes it using the Quinn-McCluskey algorithm. It is designed with the intention to aid individuals in understanding and visualizing the process of logic minimization, which is crucial in digital design. The application leverages the power of the Quine-McCluskey algorithm to simplify logical expressions, rendering a more comprehensible and optimized version of the input logic circuit. The core functionalities include generating truth tables, obtaining minimized Boolean expressions, and visualizing the corresponding Karnaugh Maps and logic circuits. You can access the project demo using this [link](http://alpha-logos-1464863388.eu-west-3.elb.amazonaws.com/).
 
+You can delve deeper into the developmental journey and the technical aspects of AlphaLogos by exploring the Project Report, which is available [here](https://github.com/ahmed-alllam/AlphaLogos/blob/main/docs/Project%20Report.pdf). For a closer look at the various test cases and their outcomes, feel free to check out the Test Cases Report [here](https://github.com/ahmed-alllam/AlphaLogos/blob/main/docs/Tests%20Report.pdf).
+
 
 ## Features
 
