@@ -36,10 +36,20 @@
 
 ## About The Project
 
-AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and optimizes it using the Quinn-McCluskey algorithm. You can access the project demo using this [link](http://alpha-logos-1464863388.eu-west-3.elb.amazonaws.com/).
+AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and optimizes it using the Quinn-McCluskey algorithm. It is designed with the intention to aid individuals in understanding and visualizing the process of logic minimization, which is crucial in digital design. The application leverages the power of the Quine-McCluskey algorithm to simplify logical expressions, rendering a more comprehensible and optimized version of the input logic circuit. The core functionalities include generating truth tables, obtaining minimized Boolean expressions, and visualizing the corresponding Karnaugh Maps and logic circuits. You can access the project demo using this [link](http://alpha-logos-1464863388.eu-west-3.elb.amazonaws.com/).
 
-> **Note**
-> This project is still under development and is not yet ready for deployment!
+
+## Features
+
+1. **Generate Truth Table**: Create a truth table based on the given logical expression.
+2. **Obtain Canonical SoP and PoS**: Acquire the canonical Sum of Products (SoP) and Product of Sums (PoS) forms of the logical expression.
+3. **Get Prime Implicants (PIs)**: Identify the prime implicants derived from the logical expression.
+4. **Get Essential Prime Implicants (EPIs)**: Determine the essential prime implicants which are crucial for the minimized expression.
+5. **Get Uncovered Minterms by EPIs**: Identify the minterms that are not covered by the essential prime implicants.
+6. **Minimize the Expression**: Utilize the Quine-McCluskey algorithm to minimize the logical expression.
+7. **Get Minimum Number of MOSFET Transistors**: Calculate the minimum number of MOSFET transistors required for the circuit.
+8. **Draw Karnaugh Map**: Visualize the logic minimization process through a Karnaugh Map.
+9. **Draw Digital Circuit Simulation**: Generate a digital circuit simulation based on the minimized expression for a hands-on understanding and visualization
 
 
 ## Tech Stack
@@ -47,12 +57,27 @@ AlphaLogos is a logic synthesis optimization tool that takes a logic circuit and
 The project utilizes the following technologies and libraries:
 
 * [![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
+* [![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 * [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 * [![Crow](https://img.shields.io/badge/Crow-800000?style=for-the-badge)](https://github.com/CrowCpp/Crow)
+* [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 * [![Boost](https://img.shields.io/badge/Boost-FF6F61?style=for-the-badge&logo=boost&logoColor=white)](https://www.boost.org/)
 * [![Jinja2](https://img.shields.io/badge/Jinja2CppLight-B41717?style=for-the-badge)](https://github.com/hughperkins/Jinja2CppLight)
 * [![CMake](https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white)](https://cmake.org/)
 * [![Catch2](https://img.shields.io/badge/Catch2-B5177B?style=for-the-badge)](https://github.com/catchorg/Catch2)
+* [![LaTeX](https://img.shields.io/badge/LaTeX-008080?style=for-the-badge&logo=latex&logoColor=white)](https://www.latex-project.org/)
+* [![Yosys](https://img.shields.io/badge/Yosys-007396?style=for-the-badge)](https://github.com/YosysHQ/yosys)
+
+
+## Screenshots
+
+<img src="https://github.com/ahmed-alllam/AlphaLogos/assets/49919286/b6be6bef-145a-4415-91f6-3ba90b1b3122" width="400">
+<img src="https://github.com/ahmed-alllam/AlphaLogos/assets/49919286/b75e816f-9c07-4571-b666-7a442d1a84a9" width="400">
+<img src="https://github.com/ahmed-alllam/AlphaLogos/assets/49919286/6fe40e22-3f17-4242-af48-3dc337642585" width="400">
+<img src="https://github.com/ahmed-alllam/AlphaLogos/assets/49919286/c171f702-09aa-4991-90d1-48a9f48adb48" width="400">
+<img src="https://github.com/ahmed-alllam/AlphaLogos/assets/49919286/a96b8c12-f33a-4353-abb1-c8f61bd87eaf" width="400">
+<img src="https://github.com/ahmed-alllam/AlphaLogos/assets/49919286/e8e8f82c-7e95-4ec0-90e8-7e6271021cad" width="400">
+
 
 
 ## Building and Running the Project
